@@ -53,12 +53,12 @@
 </section>
 
 <!--	Footer	-->
-<div id="footer-bottom">
-    <div class="container text-center">
+<div id="footer-bottom" class="bg-dark">
+    <div class="container text-center text-light">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <p>
-                    2025 © <a href="https://bkacad.edu.vn">BKACAD</a>. All rights reserved. Developed by <a href="{{ route('Admin.index') }}">Kurokuro Usagi.</a>
+                    2025 © <a href="https://bkacad.edu.vn">BKACAD</a>. All rights reserved. Developed by <a href="https://github.com/Kurosagi19">Kurosagi19</a> and <a href="https://www.facebook.com/DPawsParrot">DPawsParrot.</a>
                 </p>
             </div>
         </div>
