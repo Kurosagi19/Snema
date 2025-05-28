@@ -15,6 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string("total_price");
             $table->integer("status");
+            $table->foreignId("payment_id")->constrained("payment_options");
+            $table->foreignId("promotion_id")->constrained("promotions");
+            $table->foreignId("showtime_id")->constrained("showtimes");
+            $table->foreignId("booking_snacks_id")->constrained("booking_snacks");
+            $table->foreignId("admin_id")->constrained("admins");
+            $table->foreignId("customer_id")->constrained("customers");
         });
     }
 

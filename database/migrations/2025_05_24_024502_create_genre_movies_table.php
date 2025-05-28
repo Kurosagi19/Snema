@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('genre_movies', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("genre_id")->constrained("genres");
         });
     }
 

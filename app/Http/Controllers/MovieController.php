@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GenreMovie;
 use App\Models\Movie;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
@@ -13,7 +14,9 @@ class MovieController extends Controller
      */
     public function index()
     {
-        //
+        // Lấy tất cả phim
+        $movies = Movie::all();
+        return view('Movies.index', compact('movies'));
     }
 
     /**
@@ -21,7 +24,8 @@ class MovieController extends Controller
      */
     public function create()
     {
-        //
+        $genre = GenreMovie::all();
+        return view('Movies.create', ['genre' => $genre]);
     }
 
     /**

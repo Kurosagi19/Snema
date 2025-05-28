@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
-            $table->string("movie_name");
+            $table->string("title");
             $table->date("release_date");
             $table->string("poster");
             $table->string("author");
@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string("description");
             $table->string("comment");
             $table->integer("rating");
+            $table->foreignId("genre_movie_id")->constrained("genre_movies");
         });
     }
 

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->time("start_time");
             $table->time("end_time");
             $table->integer("status");
+            $table->foreignId("movie_id")->constrained("movies");
+            $table->foreignId("room_id")->constrained("rooms");
         });
     }
 

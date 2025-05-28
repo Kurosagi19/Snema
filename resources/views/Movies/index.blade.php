@@ -34,44 +34,18 @@
         <h2 class="mb-4">Đang Chiếu</h2>
         <div class="row">
 
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <img src="movie poster" class="card-img-top" alt="movie tile">
-                    <div class="card-body">
-                        <h5 class="card-title">movie title</h5>
-                        <p class="card-text">mvie duration phút</p>
-                        <a href="{% url 'movies:movie_detail' movie.slug %}" class="btn btn-primary">Chi Tiết</a>
+            @foreach($movies as $movie)
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ $movie->poster }}" class="card-img-top" alt="{{ $movie->title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $movie->title }}</h5>
+                            <p class="card-text">Thời lượng: {{ $movie->duration }} phút</p>
+                            <a href="#" class="btn btn-primary">Chi tiết</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-12">
-                <p>Không có phim nào đang chiếu.</p>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- Coming Soon Section -->
-<section class="mb-5">
-    <div class="container">
-        <h2 class="mb-4">Sắp Chiếu</h2>
-        <div class="row">
-
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <img src="movie poster" class="card-img-top" alt="movie title">
-                    <div class="card-body">
-                        <h5 class="card-title">movie title</h5>
-                        <p class="card-text">Khởi chiếu: showtime date</p>
-                        <a href="{% url 'movies:movie_detail' movie.slug %}" class="btn btn-primary">Chi Tiết</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <p>Không có phim nào sắp chiếu.</p>
-            </div>
+            @endforeach
 
         </div>
     </div>
@@ -83,7 +57,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <p>
-                    2025 © <a href="https://bkacad.edu.vn">BKACAD</a>. All rights reserved. Developed by <a href="{{ route('Admin.home') }}">Kurokuro Usagi.</a>
+                    2025 © <a href="https://bkacad.edu.vn">BKACAD</a>. All rights reserved. Developed by <a href="{{ route('Admin.index') }}">Kurokuro Usagi.</a>
                 </p>
             </div>
         </div>
@@ -95,3 +69,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
 </body>
 </html>
+

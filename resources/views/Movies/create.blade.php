@@ -20,13 +20,13 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Trang chủ</a>
+                    <a class="nav-link" href="{{ route('Admin.index') }}">Trang chủ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Quản lý phim</a>
+                    <a class="nav-link active" aria-current="page" href="#">Quản lý phim</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="#">Quản lý đơn đặt vé</a>
+                    <a class="nav-link" href="#">Quản lý đơn đặt vé</a>
                 </li>
                 <li>
                     <a class="nav-link" href="#">Quản lý người dùng</a>
@@ -39,7 +39,7 @@
                 Tuỳ chọn
             </a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{{route('Customer.home')}}">Đăng xuất</a></li>
+                <li><a class="dropdown-item" href="{{route('Customer.index')}}">Đăng xuất</a></li>
             </ul>
         </div>
 
@@ -54,7 +54,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <p>
-                    2025 © <a href="https://bkacad.edu.vn">BKACAD</a>. All rights reserved. Developed by <a href="{{ route('Customer.home') }}">Kurokuro Usagi.</a>
+                    2025 © <a href="https://bkacad.edu.vn">BKACAD</a>. All rights reserved. Developed by <a href="{{ route('Customer.index') }}">Kurokuro Usagi.</a>
                 </p>
             </div>
         </div>
@@ -64,5 +64,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
+</body>
+</html>
+">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
 </body>
 </html>

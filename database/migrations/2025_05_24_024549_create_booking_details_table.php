@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->date("booking_time");
             $table->integer("price");
+            $table->foreignId("seat_id")->constrained("seats");
+            $table->foreignId("booking_id")->constrained("bookings");
         });
     }
 

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer("quantity");
             $table->integer("total_price");
+            $table->foreignId("snack_id")->constrained("snacks");
         });
     }
 

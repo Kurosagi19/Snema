@@ -13,7 +13,11 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('Admin.home');
+        return view('Admin.index');
+    }
+
+    public function movies() {
+        return view('Movies.manager');
     }
 
     /**
