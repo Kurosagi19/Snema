@@ -37,9 +37,10 @@
             @foreach($movies as $movie)
                 <div class="col-md-3 mb-4">
                     <div class="card h-100">
-                        <img src="{{ $movie->poster }}" class="card-img-top" alt="{{ $movie->title }}">
+                        <img src="{{ asset('storage/' . $movie->poster) }}" class="card-img-top" alt="{{ $movie->title }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ $movie->title }}</h5>
+                            <p class="card-text">Ngày phát hành: {{ $movie->release_date }} </p>
                             <p class="card-text">Thời lượng: {{ $movie->duration }} phút</p>
                             <a href="#" class="btn btn-primary">Chi tiết</a>
                         </div>
