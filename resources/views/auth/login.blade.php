@@ -45,18 +45,23 @@
         </div>
 
         <div class="form-box register">
-            <form action="#">
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
                 <h1>Đăng ký</h1>
                 <div class="input-box">
-                    <input type="text" placeholder="Tên đăng nhập" required>
+                    <input type="text" name="name" placeholder="Tên đăng nhập" required>
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="email" placeholder="Email" required>
+                    <input type="email" name="email" placeholder="Email" required>
                     <i class='bx bxs-envelope'></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" placeholder="Mật khẩu" required>
+                    <input type="password" name="password" placeholder="Mật khẩu" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="password_confirmation" placeholder="Nhập lại mật khẩu" required>
                     <i class='bx bxs-lock-alt'></i>
                 </div>
                 <button type="submit" class="btn">Đăng ký</button>
@@ -98,6 +103,12 @@
             container.classList.remove('active');
         })
     </script>
+
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 </body>
 
 </html>

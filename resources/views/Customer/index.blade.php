@@ -21,8 +21,8 @@
             <a href="#">Khuyến mãi</a>
         </nav>
         <div class="auth-buttons">
-            <a href="login.html" class="login-btn">Đăng nhập</a>
-            <a href="register.html" class="register-btn">Đăng ký</a>
+            <a href="{{ route('login') }}" class="login-btn">Đăng nhập</a>
+            <a href="{{ route('login') }}" class="register-btn">Đăng ký</a>
         </div>
     </header>
 
