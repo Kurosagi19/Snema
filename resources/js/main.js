@@ -1,251 +1,109 @@
-// Main JavaScript file
+//JavaScript chung cho toàn bộ trang
 
-// Initialize tooltips
+// Khởi tạo khi DOM đã sẵn sàng
 document.addEventListener('DOMContentLoaded', function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    // Xử lý menu active
+    const currentPage = window.location.pathname.split('/').pop();
+    const navLinks = document.querySelectorAll('nav a');
 
-    // Initialize popovers
-    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl);
-    });
-});
-
-// Form validation
-function validateForm(formId) {
-    var form = document.getElementById(formId);
-    if (!form) return true;
-
-    var isValid = true;
-    var requiredFields = form.querySelectorAll('[required]');
-
-    requiredFields.forEach(function(field) {
-        if (!field.value.trim()) {
-            field.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            field.classList.remove('is-invalid');
+    navLinks.forEach(link => {
+        const linkPage = link.getAttribute('href').split('/').pop();
+        if (linkPage === currentPage) {
+            link.classList.add('active');
         }
     });
 
-    return isValid;
-}
+    // Xử lý nút đăng nhập/đăng ký (nếu có trên trang)
+    const loginBtn = document.querySelector('.login-btn');
+    const registerBtn = document.querySelector('.register-btn');
 
-// Seat selection
-function updateSeatSelection() {
-    var checkboxes = document.querySelectorAll('input[name="seats"]');
-    var submitBtn = document.getElementById('submit-btn');
-    var numTickets = parseInt(document.querySelector('input[name="num_tickets"]').value);
-
-    checkboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            var checkedBoxes = document.querySelectorAll('input[name="seats"]:checked');
-            if (checkedBoxes.length > numTickets) {
-                this.checked = false;
-            }
-            submitBtn.disabled = checkedBoxes.length !== numTickets;
-        });
-    });
-}
-
-// Movie search
-function searchMovies() {
-    var searchInput = document.getElementById('movieSearch');
-    if (!searchInput) return;
-
-    searchInput.addEventListener('input', function() {
-        var searchTerm = this.value.toLowerCase();
-        var movieCards = document.querySelectorAll('.movie-card');
-
-        movieCards.forEach(function(card) {
-            var title = card.querySelector('.card-title').textContent.toLowerCase();
-            var description = card.querySelector('.card-text').textContent.toLowerCase();
-
-            if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    });
-}
-
-// Booking process
-function updateBookingStep(step) {
-    var steps = document.querySelectorAll('.booking-step');
-    steps.forEach(function(s) {
-        s.classList.remove('active');
-    });
-    document.querySelector('.booking-step:nth-child(' + step + ')').classList.add('active');
-}
-
-// Image preview
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('imagePreview').src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-// Date picker initialization
-function initializeDatePicker() {
-    var datePickers = document.querySelectorAll('.datepicker');
-    datePickers.forEach(function(picker) {
-        new Datepicker(picker, {
-            format: 'dd/mm/yyyy',
-            autohide: true
-        });
-    });
-}
-
-// Time picker initialization
-function initializeTimePicker() {
-    var timePickers = document.querySelectorAll('.timepicker');
-    timePickers.forEach(function(picker) {
-        new Timepicker(picker, {
-            format: 'HH:mm',
-            autohide: true
-        });
-    });
-}
-
-// Modal handling
-function showModal(modalId) {
-    var modal = new bootstrap.Modal(document.getElementById(modalId));
-    modal.show();
-}
-
-function hideModal(modalId) {
-    var modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
-    if (modal) {
-        modal.hide();
-    }
-}
-
-// AJAX form submission
-function submitFormAjax(formId, successCallback, errorCallback) {
-    var form = document.getElementById(formId);
-    if (!form) return;
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        var formData = new FormData(form);
-
-        fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    if (successCallback) successCallback(data);
-                } else {
-                    if (errorCallback) errorCallback(data);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                if (errorCallback) errorCallback({ error: 'An error occurred' });
-            });
-    });
-}
-
-// Toast notifications
-function showToast(message, type = 'success') {
-    var toast = document.createElement('div');
-    toast.className = 'toast align-items-center text-white bg-' + type + ' border-0';
-    toast.setAttribute('role', 'alert');
-    toast.setAttribute('aria-live', 'assertive');
-    toast.setAttribute('aria-atomic', 'true');
-
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                ${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    `;
-
-    document.body.appendChild(toast);
-    var bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-
-    toast.addEventListener('hidden.bs.toast', function() {
-        toast.remove();
-    });
-}
-
-// Password strength meter
-function checkPasswordStrength(password) {
-    var strength = 0;
-
-    if (password.length >= 8) strength++;
-    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
-    if (password.match(/\d/)) strength++;
-    if (password.match(/[^a-zA-Z\d]/)) strength++;
-
-    return strength;
-}
-
-// Update password strength indicator
-function updatePasswordStrength(input) {
-    var strength = checkPasswordStrength(input.value);
-    var indicator = document.getElementById('passwordStrength');
-    if (!indicator) return;
-
-    var strengthText = ['Rất yếu', 'Yếu', 'Trung bình', 'Mạnh', 'Rất mạnh'];
-    var strengthClass = ['danger', 'warning', 'info', 'primary', 'success'];
-
-    indicator.textContent = strengthText[strength - 1];
-    indicator.className = 'badge bg-' + strengthClass[strength - 1];
-}
-
-// Initialize all components
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips and popovers
-    initializeTooltips();
-
-    // Initialize form validation
-    var forms = document.querySelectorAll('form');
-    forms.forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            if (!validateForm(form.id)) {
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function(e) {
+            if (!this.tagName === 'A') {
                 e.preventDefault();
-                showToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'danger');
+                window.location.href = 'login.html';
             }
         });
-    });
-
-    // Initialize seat selection
-    if (document.querySelector('input[name="seats"]')) {
-        updateSeatSelection();
     }
 
-    // Initialize movie search
-    if (document.getElementById('movieSearch')) {
-        searchMovies();
-    }
-
-    // Initialize date and time pickers
-    initializeDatePicker();
-    initializeTimePicker();
-
-    // Initialize password strength meter
-    var passwordInput = document.querySelector('input[type="password"]');
-    if (passwordInput) {
-        passwordInput.addEventListener('input', function() {
-            updatePasswordStrength(this);
+    if (registerBtn) {
+        registerBtn.addEventListener('click', function(e) {
+            if (!this.tagName === 'A') {
+                e.preventDefault();
+                window.location.href = 'register.html';
+            }
         });
+    }
+
+    // Load dữ liệu phim (nếu có trên trang)
+    if (document.querySelector('.movie-slider')) {
+        loadFeaturedMovies();
+    }
+
+    // Load dữ liệu rạp (nếu có trên trang)
+    if (document.querySelector('.cinema-grid')) {
+        loadFeaturedCinemas();
     }
 });
+
+// Hàm load phim nổi bật
+function loadFeaturedMovies() {
+    setTimeout(() => {
+        const movies = [
+            { id: 1, title: 'Avengers: Endgame', rating: 8.5, image: 'images/movie1.jpg' },
+            { id: 2, title: 'Spider-Man: No Way Home', rating: 8.2, image: 'images/movie2.jpg' },
+            { id: 3, title: 'The Batman', rating: 7.9, image: 'images/movie3.jpg' },
+            { id: 4, title: 'Dune', rating: 8.0, image: 'images/movie4.jpg' }
+        ];
+
+        const slider = document.querySelector('.movie-slider');
+        slider.innerHTML = '';
+
+        movies.forEach(movie => {
+            const movieCard = document.createElement('div');
+            movieCard.className = 'movie-card';
+            movieCard.innerHTML = `
+                <img src="${movie.image}" alt="${movie.title}">
+                <div class="movie-info">
+                    <h3>${movie.title}</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i> ${movie.rating}/10
+                    </div>
+                    <a href="movie-detail.html?id=${movie.id}" class="book-btn">Chi tiết</a>
+                </div>
+            `;
+            slider.appendChild(movieCard);
+        });
+    }, 500);
+}
+
+// Hàm load rạp nổi bật
+function loadFeaturedCinemas() {
+    setTimeout(() => {
+        const cinemas = [
+            { id: 1, name: 'CGV Hùng Vương Plaza', location: 'Quận 5, TP.HCM' },
+            { id: 2, name: 'Lotte Cinema Đà Nẵng', location: 'Quận Hải Châu, Đà Nẵng' },
+            { id: 3, name: 'BHD Star Phạm Hùng', location: 'Quận 8, TP.HCM' },
+            { id: 4, name: 'Galaxy Nguyễn Du', location: 'Quận 1, TP.HCM' }
+        ];
+
+        const grid = document.querySelector('.cinema-grid');
+        grid.innerHTML = '';
+
+        cinemas.forEach(cinema => {
+            const cinemaCard = document.createElement('div');
+            cinemaCard.className = 'cinema-card';
+            cinemaCard.innerHTML = `
+                <div class="cinema-image">
+                    <img src="images/cinema${cinema.id}.jpg" alt="${cinema.name}">
+                </div>
+                <div class="cinema-info">
+                    <h3>${cinema.name}</h3>
+                    <p>${cinema.location}</p>
+                    <a href="cinemas.html?id=${cinema.id}" class="view-btn">Xem chi tiết</a>
+                </div>
+            `;
+            grid.appendChild(cinemaCard);
+        });
+    }, 500);
+}

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use App\Models\Booking;
+use App\Models\Customer;
+use App\Models\Movie;
 
 class AdminController extends Controller
 {
@@ -13,11 +16,15 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('Admin.index');
+        $movies = Movie::count();
+        $bookings = Booking::count();
+        $customers = Customer::count();
+        return view('Admin.dashboard', compact('movies', 'bookings', 'customers'));
     }
 
     public function movies() {
-        return view('Movies.manager');
+        $movies = Movie::all();
+        return view('Movies.manager', compact('movies'));
     }
 
     /**

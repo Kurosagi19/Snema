@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Movie;
 
 class CustomerController extends Controller
 {
@@ -13,7 +14,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return view('Customer.index');
+        $movies = Movie::all();
+        return view('Customer.index', compact('movies'));
     }
 
     /**
