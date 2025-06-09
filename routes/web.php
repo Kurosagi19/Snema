@@ -20,9 +20,13 @@ Route::prefix('/Customer')->group(function() {
 
 Route::prefix('/Admin')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->middleware('auth')->name('Admin.dashboard');
-   Route::get('/movies', [\App\Http\Controllers\AdminController::class, 'movies'])->name('Admin.movies');
-   Route::get('/movies/create', [\App\Http\Controllers\MovieController::class, 'create'])->name('Movies.create');
+    Route::get('/movies', [\App\Http\Controllers\AdminController::class, 'movies'])->name('Admin.movies');
+    Route::get('/movies/create', [\App\Http\Controllers\MovieController::class, 'create'])->name('Movies.create');
+    Route::delete('/movies/{id}', [\App\Http\Controllers\MovieController::class, 'destroy'])->name('Movies.destroy');
+    Route::get('/movies/edit', [\App\Http\Controllers\MovieController::class, 'create'])->name('Movies.edit');
 });
+
+
 
 
 

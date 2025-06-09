@@ -6,6 +6,8 @@ use App\Models\GenreMovie;
 use App\Models\Movie;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class MovieController extends Controller
 {
@@ -63,8 +65,11 @@ class MovieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Movie $movie)
+    public function destroy(Movie $movie, Request $request)
     {
-        //
+        $del_movie = new Movie();
+        $del_movie->id = $request->id;
+        $del_movie->destroyMovie();
+        return Redirect::route('Admin.movies');
     }
 }

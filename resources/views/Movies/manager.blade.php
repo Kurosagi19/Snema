@@ -19,9 +19,9 @@
         <nav class="admin-nav">
             <a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="{{ route('Admin.movies') }}"><i class="fas fa-film"></i> Quản lý phim</a>
-            <a href="showtimes.html"><i class="fas fa-calendar-alt"></i>Suất chiếu</a>
-            <a href="users.html"><i class="fas fa-users"></i>Người dùng</a>
-            <a href="bookings.html"><i class="fas fa-ticket-alt"></i>Đơn đặt vé</a>
+            <a href="#"><i class="fas fa-calendar-alt"></i>Suất chiếu</a>
+            <a href="#"><i class="fas fa-users"></i>Người dùng</a>
+            <a href="#"><i class="fas fa-ticket-alt"></i>Đơn đặt vé</a>
         </nav>
     </aside>
 
@@ -44,11 +44,41 @@
                             <img src="{{ asset('storage/' . $movie->poster) }}" class="card-img-top" alt="{{ $movie->title }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $movie->title }}</h5>
-                                <a href="#" class="btn btn-success">Sửa</a>
-                                <a href="#" class="btn btn-danger">Xoá</a>
+                                <button type="button" class="btn btn-warning" >Sửa</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal{{ $movie->id }}">Xoá</button>
                             </div>
                         </div>
                     </div>
+
+                    {{--        Modal--}}
+                    <div class="modal fade" id="myModal{{ $movie->id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Xác nhận xóa</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    Bạn có chắc chắn muốn xóa mục này?
+                                </div>
+
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <div class="modal-footer">
+                                        <button class="btn btn-light" data-bs-dismiss="modal">Không</button>
+                                        <form method="post" action="{{ route('Movies.destroy', $movie->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger">Có</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{--            End Modal--}}
                 @endforeach
             </div>
         </section>

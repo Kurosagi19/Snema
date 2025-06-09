@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->string("total_price");
+            $table->integer("total_price");
+            $table->integer("discount_price");
+            $table->integer("final_price");
             $table->integer("status");
             $table->foreignId("payment_id")->constrained("payment_options");
             $table->foreignId("promotion_id")->constrained("promotions");
