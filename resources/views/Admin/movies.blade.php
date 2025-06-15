@@ -22,7 +22,7 @@
                 <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
                 <li><a href=""><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
                 <li><a href=""><i class="fas fa-users"></i> Quản lý người dùng</a></li>
-                <li><a href="{{ route('Admin.dashboard') }}"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
+                <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
             </ul>
         </aside>
 
@@ -31,7 +31,7 @@
             <div class="page-header">
                 <h1 class="page-title">Quản lý phim</h1>
                 <button class="btn btn-primary" onclick="openModalWithData('movie')" data-bs-toggle="movieModal">
-                    <i class="fas fa-plus"></i> <a href="{{ route('Movies.create') }}" style="color: white">Thêm phim</a>
+                    <i class="fas fa-plus"></i> <a href="{{ route('movies.create') }}" style="color: white">Thêm phim</a>
                 </button>
             </div>
 
@@ -67,7 +67,7 @@
                                 <div class="modal-footer">
                                     <div class="modal-footer">
                                         <button class="btn btn-light" data-bs-dismiss="modal">Không</button>
-                                        <form method="post" action="{{ route('Movies.destroy', $movie->id) }}">
+                                        <form method="post" action="{{ route('movies.destroy', $movie->id) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-danger">Có</button>

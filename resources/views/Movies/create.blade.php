@@ -23,9 +23,9 @@
             </form>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('Admin.movies') }}" class="active"><i class="fas fa-film"></i> Quản lý phim</a></li>
+            <li><a href="{{ route('admin.movies') }}" class="active"><i class="fas fa-film"></i> Quản lý phim</a></li>
             <li><a href=""><i class="fas fa-users"></i> Quản lý người dùng</a></li>
-            <li><a href="{{ route('Admin.dashboard') }}"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
+            <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
             <li><a href=""><i class="fas fa-tags"></i> Quản lý thể loại</a></li>
             <li><a href=""><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
             <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
@@ -35,7 +35,7 @@
 
     <main class="main-content">
         <div class="col-md-3 mb-4">
-        <form action="{{ route('Movies.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('movies.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <table class="table table-bordered" style="width: 100%;">
                 <tr>
