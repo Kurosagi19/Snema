@@ -9,4 +9,6 @@ class Genre extends Model
 {
     /** @use HasFactory<\Database\Factories\GenreFactory> */
     use HasFactory;
+    public $timestamps = false;
+    protected $fillable = ['id', 'genre_name'];
 }

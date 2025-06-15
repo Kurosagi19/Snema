@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genre;
 use App\Models\GenreMovie;
 use App\Http\Requests\StoreGenreMovieRequest;
 use App\Http\Requests\UpdateGenreMovieRequest;
@@ -13,7 +14,8 @@ class GenreMovieController extends Controller
      */
     public function index()
     {
-        //
+        $genres = Genre::all();
+        return view('Genre.index', compact('genres'));
     }
 
     /**
@@ -21,7 +23,7 @@ class GenreMovieController extends Controller
      */
     public function create()
     {
-        //
+        return view('Genre.create');
     }
 
     /**
@@ -29,7 +31,23 @@ class GenreMovieController extends Controller
      */
     public function store(StoreGenreMovieRequest $request)
     {
-        //
+        $request->validate([
+            'genre_name' => 'required|string|max:100|unique:genres,genre_name',
+            // nếu có thêm trường genre_movie thì validate thêm
+        ]);
+
+        // Tạo mới genre
+        $genre = Genre::create([
+            'genre_name' => $request->genre_name,
+        ]);
+
+        // Tạo genre_movie gắn với genre vừa tạo
+        $genreMovie = GenreMovie::create([
+            'genre_id' => $genre->id,
+            // 'other_field' => $request->... nếu có
+        ]);
+
+        return redirect()->route('genres.index')->with('success', 'Thêm thể loại thành công!');
     }
 
     /**
@@ -59,8 +77,18 @@ class GenreMovieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(GenreMovie $genreMovie)
+    public function destroy($id)
     {
-        //
+        $genre_movie = GenreMovie::findOrFail($id);
+        $genre_id = $genre_movie->genre_id;
+        // Xoá bản ghi genre_movie trước
+        $genre_movie->delete();
+        // Kiểm tra xem genre có còn được dùng ở genre_movies khác không
+        $genre_still_used = GenreMovie::where('genre_id', $genre_id)->exists();
+        if (!$genre_still_used) {
+            Genre::where('id', $genre_id)->delete();
+        }
+        return redirect()->route('genres.index')
+            ->with('success', 'Đã xoá thể loại và liên kết thành công.');
     }
 }

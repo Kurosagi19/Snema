@@ -43,17 +43,26 @@ class GenreController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Genre $genre)
+    public function edit($id)
     {
-        //
+        $genres = Genre::findOrFail($id);
+        return view('Genre.edit', compact('genres'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateGenreRequest $request, Genre $genre)
+    public function update(UpdateGenreRequest $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:100|unique:genres,genre_name,' . $id,
+        ]);
+
+        $genre = Genre::findOrFail($id);
+        $genre->genre_name = $request->name;
+        $genre->save();
+
+        return redirect()->route('genres.index')->with('success', 'Cập nhật thể loại thành công!');
     }
 
     /**

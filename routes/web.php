@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\GenreController;
+use App\Http\Controllers\GenreMovieController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,6 +34,13 @@ Route::prefix('/admin')->group(function () {
     Route::post('/movies/create', [\App\Http\Controllers\MovieController::class, 'store'])->name('movies.store');
     Route::delete('/movies/{id}', [\App\Http\Controllers\MovieController::class, 'destroy'])->name('movies.destroy');
     Route::get('/movies/edit', [\App\Http\Controllers\MovieController::class, 'edit'])->name('movies.edit');
+    Route::get('/genres', [\App\Http\Controllers\GenreMovieController::class, 'index'])->name('genres.index');
+    Route::get('/genres/create', [\App\Http\Controllers\GenreMovieController::class, 'create'])->name('genres.create');
+    Route::post('/genres/create', [\App\Http\Controllers\GenreMovieController::class, 'store'])->name('genres.store');
+    Route::resource('genre-movies', GenreMovieController::class);
+    Route::delete('/genres/{id}', [GenreMovieController::class, 'destroy'])->name('genres.destroy');
+    Route::get('/genres/{id}/edit', [GenreController::class, 'edit'])->name('genres.edit');
+    Route::put('/genres/{id}', [GenreController::class, 'update'])->name('genres.update');
 });
 
 Route::prefix('/admin')->group(function () {

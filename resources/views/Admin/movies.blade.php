@@ -18,7 +18,7 @@
             </div>
             <ul class="sidebar-menu">
                 <li><a href="#" class="active"><i class="fas fa-film"></i> Quản lý phim</a></li>
-                <li><a href=""><i class="fas fa-tags"></i> Quản lý thể loại</a></li>
+                <li><a href="{{ route('genres.index') }}"><i class="fas fa-tags"></i> Quản lý thể loại</a></li>
                 <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
                 <li><a href=""><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
                 <li><a href=""><i class="fas fa-users"></i> Quản lý người dùng</a></li>
