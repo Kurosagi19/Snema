@@ -78,7 +78,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{--            End Modal--}}
                 @endforeach
             </div>
         </section>

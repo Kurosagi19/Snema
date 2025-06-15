@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string("caption");
             $table->string("description");
             $table->string("comment");
-            $table->integer("rating");
+            $table->double("rating");
             $table->foreignId("genre_movie_id")->constrained("genre_movies");
         });
     }

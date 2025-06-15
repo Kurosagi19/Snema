@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->integer("room_number");
             $table->integer("total_seat");
-            $table->foreignId("seat_id")->constrained("seats");
             $table->foreignId("cinema_id")->constrained("cinemas");
         });
     }

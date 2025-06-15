@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Genre;
+use App\Models\GenreMovie;
 use App\Models\Movie;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class CustomerController extends Controller
 {
@@ -14,8 +19,13 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $movies = Movie::all();
-        return view('Customer.index', compact('movies'));
+        $movies = DB::table('movies')
+            ->join('genre_movies', 'movies.genre_movie_id', '=', 'genre_movies.id')
+            ->join('genres', 'genre_movies.genre_id', '=', 'genres.id')
+            ->select('movies.*', 'genres.genre_name as genre_name', 'genres.id as genre_id')
+            ->get();
+        $genres = Genre::all();
+        return view('Customer.index', compact('movies', 'genres'));
     }
 
     /**
@@ -23,7 +33,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -31,7 +41,7 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        //
+
     }
 
     /**

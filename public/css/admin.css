@@ -1,182 +1,318 @@
 /* admin.css - Styling cho khu vực quản trị */
 
+:root {
+    --primary-color: #ff4d4d;
+    --secondary-color: #333;
+    --background-color: #f6f7fb;
+    --card-bg: #fff;
+    --text-color: #333;
+    --border-color: #e1e1e1;
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+    --info-color: #2196f3;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background: var(--background-color);
+    color: var(--text-color);
+}
+
 .admin-container {
     display: flex;
     min-height: 100vh;
-    background-color: #f8f9fc;
 }
 
-.admin-sidebar {
+
+/* Sidebar Styles */
+
+.sidebar {
     width: 250px;
-    background-color: #4e73df;
-    color: white;
-    padding: 1.5rem 0;
+    background: var(--secondary-color);
+    color: #fff;
+    padding: 2rem 0;
     position: fixed;
-    height: 100%;
+    height: 100vh;
+    overflow-y: auto;
 }
 
-.admin-logo {
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 0 1.5rem 1.5rem;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.sidebar-header {
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.admin-nav {
-    margin-top: 1.5rem;
+.sidebar-header h2 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
 }
 
-.admin-nav a {
-    display: block;
-    color: rgba(255, 255, 255, 0.8);
-    padding: 0.75rem 1.5rem;
+.sidebar-menu {
+    list-style: none;
+}
+
+.sidebar-menu li {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    color: #fff;
     text-decoration: none;
-    transition: all 0.3s;
+    transition: background 0.3s;
 }
 
-.admin-nav a:hover {
-    color: white;
-    background-color: rgba(255, 255, 255, 0.1);
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.admin-nav a.active {
-    color: white;
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-.admin-nav i {
-    margin-right: 0.5rem;
-    width: 1.2rem;
+.sidebar-menu i {
+    margin-right: 0.8rem;
+    width: 20px;
     text-align: center;
 }
 
-.admin-content {
+
+/* Main Content Styles */
+
+.main-content {
     flex: 1;
     margin-left: 250px;
-    padding: 1.5rem;
+    padding: 2rem;
 }
 
-.admin-header {
+.page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e3e6f0;
 }
 
-.admin-header h1 {
+.page-title {
     font-size: 1.8rem;
-    color: #4e73df;
+    color: var(--text-color);
 }
 
-.admin-user {
-    display: flex;
+
+/* Common Button Styles */
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
+    transition: all 0.3s;
+    text-decoration: none;
 }
 
-.logout-btn {
-    color: #d1d3e2;
-    font-size: 1.2rem;
-    transition: color 0.3s;
+.btn-primary {
+    background: var(--primary-color);
+    color: #fff;
 }
 
-.logout-btn:hover {
-    color: #4e73df;
+.btn-success {
+    background: var(--success-color);
+    color: #fff;
 }
 
-.stats-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+.btn-warning {
+    background: var(--warning-color);
+    color: #fff;
 }
 
-.stat-card {
-    background: white;
-    border-radius: 0.35rem;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-    display: flex;
+.btn-danger {
+    background: var(--danger-color);
+    color: #fff;
+}
+
+.btn-info {
+    background: var(--info-color);
+    color: #fff;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+
+/* Table Styles */
+
+.table-container {
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 }
 
-.stat-icon {
-    width: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
+.table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.stat-info {
-    flex: 1;
-    padding: 1.5rem;
+.table th,
+.table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.stat-info h3 {
-    font-size: 0.9rem;
+.table th {
+    background: #f8f9fa;
     font-weight: 600;
-    color: #858796;
+    color: var(--text-color);
+}
+
+.table tr:hover {
+    background: #f8f9fa;
+}
+
+
+/* Form Styles */
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
     margin-bottom: 0.5rem;
+    color: var(--text-color);
+    font-weight: 500;
 }
 
-.stat-info p {
+.form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+
+/* Modal Styles */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background: #fff;
+    width: 90%;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
     font-size: 1.5rem;
-    font-weight: 700;
-    color: #5a5c69;
+    cursor: pointer;
+    color: #666;
 }
 
-.admin-charts {
+
+/* Card Grid */
+
+.card-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 2rem;
 }
 
-.chart-container {
-    background: white;
-    border-radius: 0.35rem;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-body {
     padding: 1.5rem;
 }
 
-.chart-container h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #5a5c69;
-    margin-bottom: 1rem;
+.card-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+
+/* Status Badges */
+
+.badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-success {
+    background: #e8f5e9;
+    color: var(--success-color);
+}
+
+.badge-warning {
+    background: #fff3e0;
+    color: var(--warning-color);
+}
+
+.badge-danger {
+    background: #ffebee;
+    color: var(--danger-color);
+}
+
+.badge-info {
+    background: #e3f2fd;
+    color: var(--info-color);
 }
 
 
 /* Responsive */
 
-@media (max-width: 992px) {
-    .admin-charts {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (max-width: 768px) {
-    .admin-sidebar {
-        width: 80px;
-        overflow: hidden;
+    .sidebar {
+        width: 0;
+        padding: 0;
     }
-    .admin-logo,
-    .admin-nav span {
-        display: none;
+    .main-content {
+        margin-left: 0;
     }
-    .admin-nav a {
-        text-align: center;
-        padding: 1rem 0;
-    }
-    .admin-nav i {
-        margin-right: 0;
-        font-size: 1.2rem;
-    }
-    .admin-content {
-        margin-left: 80px;
+    .card-grid {
+        grid-template-columns: 1fr;
     }
 }

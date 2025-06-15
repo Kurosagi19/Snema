@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
+use App\Models\PaymentOption;
+use App\Models\Promotion;
+use App\Models\Showtime;
+use App\Models\Snack;
 
 class BookingController extends Controller
 {
@@ -19,9 +23,24 @@ class BookingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Showtime $showtime)
     {
-        //
+        $showtime->load('rooms', 'movies');
+
+        $payment_options = PaymentOption::all();        // bảng payment_options
+        $promotions = Promotion::all();                // mã khuyến mãi
+        $snacks = Snack::all();                        // danh sách combo
+        $admin_id = auth()->user()->id ?? null;         // hoặc dùng Auth::guard('admin')->id()
+        $customer_id = auth()->id();                    // nếu người dùng đang đăng nhập
+
+        return view('Customer.booking', [
+            'showtime' => $showtime,
+            'payment_options' => $payment_options,
+            'promotions' => $promotions,
+            'snacks' => $snacks,
+            'admin_id' => $admin_id,
+            'customer_id' => $customer_id,
+        ]);
     }
 
     /**

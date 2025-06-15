@@ -9,4 +9,12 @@ class Showtime extends Model
 {
     /** @use HasFactory<\Database\Factories\ShowtimeFactory> */
     use HasFactory;
+
+    public function movies() {
+        return $this->belongsTo(Movie::class);
+    }
+
+    public function rooms() {
+        return $this->belongsTo(Room::class);
+    }
 }

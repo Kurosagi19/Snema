@@ -9,4 +9,10 @@ class GenreMovie extends Model
 {
     /** @use HasFactory<\Database\Factories\GenreMovieFactory> */
     use HasFactory;
+
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class);
+    }
+
 }

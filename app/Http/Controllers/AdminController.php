@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Movie;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Redirect;
 
 class AdminController extends Controller
 {
@@ -19,12 +21,13 @@ class AdminController extends Controller
         $movies = Movie::count();
         $bookings = Booking::count();
         $customers = Customer::count();
-        return view('Admin.dashboard', compact('movies', 'bookings', 'customers'));
+        $admins = Admin::all();
+        return view('Admin.dashboard', compact('movies', 'bookings', 'customers', 'admins'));
     }
 
     public function movies() {
         $movies = Movie::all();
-        return view('Movies.manager', compact('movies'));
+        return view('Admin.movies', compact('movies'));
     }
 
     /**
@@ -32,7 +35,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        return view('Admin.create');
     }
 
     /**
@@ -40,7 +43,13 @@ class AdminController extends Controller
      */
     public function store(StoreAdminRequest $request)
     {
-        //
+        $password = bcrypt($request->password);
+        $array = [];
+        $array = Arr::add($array, 'name', $request->name);
+        $array = Arr::add($array, 'email', $request->email);
+        $array = Arr::add($array, 'password', $password);
+        Admin::create($array);
+        return Redirect::route('Admin.dashboard');
     }
 
     /**

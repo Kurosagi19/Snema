@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cinema;
+use App\Models\Genre;
 use App\Models\GenreMovie;
 use App\Models\Movie;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
+use App\Models\Showtime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
@@ -26,8 +32,13 @@ class MovieController extends Controller
      */
     public function create()
     {
-        $genre = GenreMovie::all();
-        return view('Movies.create', ['genre' => $genre]);
+        $movies = DB::table('movies')
+            ->join('genre_movies', 'movies.genre_movie_id', '=', 'genre_movies.id')
+            ->join('genres', 'genre_movies.genre_id', '=', 'genres.id')
+            ->select('movies.*', 'genres.genre_name as genre_name', 'genres.id as genre_id')
+            ->get();
+        $genres = Genre::all();
+        return view('Movies.create', compact('movies', 'genres'));
     }
 
     /**
@@ -35,15 +46,35 @@ class MovieController extends Controller
      */
     public function store(StoreMovieRequest $request)
     {
-        //
+        $img_name = $request->file('poster')->getClientOriginalName();
+        if(!Storage::exists('/public/dashboard/img'.$img_name)) {
+            Storage::putFileAs('public/dashboard/img', $request->file('poster'), $img_name);
+        }
+        $array = [];
+        $array = Arr::add($array, 'title', $request->title);
+        $array = Arr::add($array, 'release_date', $request->release_date);
+        $array = Arr::add($array, 'poster', $img_name);
+        $array = Arr::add($array, 'author', $request->author);
+        $array = Arr::add($array, 'duration', $request->duration);
+        $array = Arr::add($array, 'language', $request->language);
+        $array = Arr::add($array, 'caption', $request->caption);
+        $array = Arr::add($array, 'description', $request->description);
+        $array = Arr::add($array, 'comment', $request->comment);
+        $array = Arr::add($array, 'rating', $request->rating);
+        $array = Arr::add($array, 'genre_movie_id', $request->genre_movie_id);
+        Movie::create($array);
+        return Redirect::route('Admin.movies');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Movie $movie)
+    public function details($id)
     {
-
+        $cinemas = Cinema::all();
+        $showtimes = Showtime::all();
+        $movies = Movie::with('genre_movie.genre')->findOrFail($id);
+        return view('Movies.movie_details', compact('movies', 'cinemas', 'showtimes'));
     }
 
     /**
@@ -51,7 +82,8 @@ class MovieController extends Controller
      */
     public function edit(Movie $movie)
     {
-        //
+        $genre = GenreMovie::all();
+        return view('Movies.edit', ['genre' => $genre]);
     }
 
     /**
