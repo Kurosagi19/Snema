@@ -38,7 +38,7 @@ class MovieController extends Controller
             ->select('movies.*', 'genres.genre_name as genre_name', 'genres.id as genre_id')
             ->get();
         $genres = Genre::all();
-        return view('Movies.create', compact('movies', 'genres'));
+        return view('movies.create', compact('movies', 'genres'));
     }
 
     /**
@@ -63,7 +63,7 @@ class MovieController extends Controller
         $array = Arr::add($array, 'rating', $request->rating);
         $array = Arr::add($array, 'genre_movie_id', $request->genre_movie_id);
         Movie::create($array);
-        return Redirect::route('Admin.movies');
+        return Redirect::route('admin.movies');
     }
 
     /**
@@ -74,7 +74,7 @@ class MovieController extends Controller
         $cinemas = Cinema::all();
         $showtimes = Showtime::all();
         $movies = Movie::with('genre_movie.genre')->findOrFail($id);
-        return view('Movies.movie_details', compact('movies', 'cinemas', 'showtimes'));
+        return view('movies.movie_details', compact('movies', 'cinemas', 'showtimes'));
     }
 
     /**
@@ -83,7 +83,7 @@ class MovieController extends Controller
     public function edit(Movie $movie)
     {
         $genre = GenreMovie::all();
-        return view('Movies.edit', ['genre' => $genre]);
+        return view('movies.edit', ['genre' => $genre]);
     }
 
     /**
@@ -102,6 +102,6 @@ class MovieController extends Controller
         $del_movie = new Movie();
         $del_movie->id = $request->id;
         $del_movie->destroyMovie();
-        return Redirect::route('Admin.movies');
+        return Redirect::route('admin.movies');
     }
 }
