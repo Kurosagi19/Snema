@@ -92,11 +92,12 @@
 
                 <div class="mb-3">
                     <label class="form-label">Thể loại</label>
-                    <select name="genre_movie_id" class="form-control" required>
+                    <select name="genre_movie_id" class="form-select" required>
                         <option value="">-- Chọn thể loại --</option>
-                        @foreach($genres as $genre)
-                            <option value="{{ $genre->id }}">
-                                {{ $genre->genre_name }}
+                        @foreach ($genre_movies as $genre_movie)
+                            <option value="{{ $genre_movie->id }}"
+                                {{ $genre_movie->id == $movie->genre_movie_id ? 'selected' : '' }}>
+                                {{ $genre_movie->genre->genre_name }}
                             </option>
                         @endforeach
                     </select>

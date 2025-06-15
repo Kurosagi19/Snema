@@ -83,8 +83,8 @@ class MovieController extends Controller
     public function edit($id)
     {
         $movie = Movie::with('genre_movie.genre')->findOrFail($id);
-        $genres = Genre::all();
-        return view('Movies.edit', compact('movie', 'genres'));
+        $genre_movies = GenreMovie::with('genre')->get();
+        return view('Movies.edit', compact('movie', 'genre_movies'));
     }
 
     /**
