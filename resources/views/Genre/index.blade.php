@@ -17,7 +17,7 @@
             <h2>Admin Panel</h2>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('movies.index') }}"><i class="fas fa-film"></i> Quản lý phim</a></li>
+            <li><a href="{{ route('admin.movies') }}"><i class="fas fa-film"></i> Quản lý phim</a></li>
             <li><a href="#" class="active"><i class="fas fa-tags"></i> Quản lý thể loại</a></li>
             <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
             <li><a href=""><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>

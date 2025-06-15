@@ -80,18 +80,53 @@ class MovieController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Movie $movie)
+    public function edit($id)
     {
-        $genre = GenreMovie::all();
-        return view('movies.edit', ['genre' => $genre]);
+        $movie = Movie::with('genre_movie.genre')->findOrFail($id);
+        $genres = Genre::all();
+        return view('Movies.edit', compact('movie', 'genres'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMovieRequest $request, Movie $movie)
+    public function update(UpdateMovieRequest $request, $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'release_date' => 'required|date',
+            'poster' => 'nullable|image|mimes:jpg,jpeg,png',
+            'author' => 'nullable|string',
+            'duration' => 'nullable|integer',
+            'language' => 'nullable|string',
+            'caption' => 'nullable|string',
+            'description' => 'nullable|string',
+            'rating' => 'nullable|numeric|min:0|max:10',
+            'genre_movie_id' => 'nullable|exists:genre_movies,id',
+        ]);
+
+        $movie = Movie::findOrFail($id);
+
+        $movie->update([
+            'title' => $request->title,
+            'release_date' => $request->release_date,
+            'author' => $request->author,
+            'duration' => $request->duration,
+            'language' => $request->language,
+            'caption' => $request->caption,
+            'description' => $request->description,
+            'rating' => $request->rating,
+            'genre_movie_id' => $request->genre_movie_id,
+        ]);
+
+        // Nếu người dùng upload poster mới
+        if ($request->hasFile('poster')) {
+            $poster_path = $request->file('poster')->store('posters', 'public');
+            $movie->poster = $poster_path;
+            $movie->save();
+        }
+
+        return redirect()->route('admin.movies')->with('success', 'Cập nhật phim thành công!');
     }
 
     /**

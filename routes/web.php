@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GenreMovieController;
+use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,7 +34,8 @@ Route::prefix('/admin')->group(function () {
     Route::get('/movies/create', [\App\Http\Controllers\MovieController::class, 'create'])->name('movies.create');
     Route::post('/movies/create', [\App\Http\Controllers\MovieController::class, 'store'])->name('movies.store');
     Route::delete('/movies/{id}', [\App\Http\Controllers\MovieController::class, 'destroy'])->name('movies.destroy');
-    Route::get('/movies/edit', [\App\Http\Controllers\MovieController::class, 'edit'])->name('movies.edit');
+    Route::get('/movies/{id}/edit', [MovieController::class, 'edit'])->name('movies.edit');
+    Route::put('/movies/{id}', [MovieController::class, 'update'])->name('movies.update');
     Route::get('/genres', [\App\Http\Controllers\GenreMovieController::class, 'index'])->name('genres.index');
     Route::get('/genres/create', [\App\Http\Controllers\GenreMovieController::class, 'create'])->name('genres.create');
     Route::post('/genres/create', [\App\Http\Controllers\GenreMovieController::class, 'store'])->name('genres.store');
