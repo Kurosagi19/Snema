@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Xử lý đăng xuất
-    document.querySelector('.logout-btn') ? .addEventListener('click', function(e) {
+    document.querySelector('.logout-btn') ?.addEventListener('click', function(e) {
         e.preventDefault();
         if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
             window.location.href = '../login.html';
