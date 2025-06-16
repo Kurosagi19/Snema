@@ -33,7 +33,6 @@ class GenreMovieController extends Controller
     {
         $request->validate([
             'genre_name' => 'required|string|max:100|unique:genres,genre_name',
-            // nếu có thêm trường genre_movie thì validate thêm
         ]);
 
         // Tạo mới genre
@@ -44,7 +43,6 @@ class GenreMovieController extends Controller
         // Tạo genre_movie gắn với genre vừa tạo
         $genreMovie = GenreMovie::create([
             'genre_id' => $genre->id,
-            // 'other_field' => $request->... nếu có
         ]);
 
         return redirect()->route('genres.index')->with('success', 'Thêm thể loại thành công!');

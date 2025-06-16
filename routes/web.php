@@ -42,16 +42,17 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/genres/{id}', [GenreMovieController::class, 'destroy'])->name('genres.destroy');
     Route::get('/genres/{id}/edit', [GenreController::class, 'edit'])->name('genres.edit');
     Route::put('/genres/{id}', [GenreController::class, 'update'])->name('genres.update');
+    Route::get('/snacks', [\App\Http\Controllers\SnackController::class, 'index'])->name('snacks.index');
 });
 
 Route::prefix('/admin')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('auth.login-admin');
     Route::post('/login', [\App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login.submit');
     Route::post('/logout', [\App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
-    Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'destroy'])->name('bookings.destroy');
 
 
-    Route::middleware('auth:admin')->group(function () {
+    Route::prefix('/admin')->group(function () {
         Route::get('/dashboard', function () {
             return 'Admin dashboard';
         })->name('admin.dashboard');

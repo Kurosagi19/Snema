@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/customer.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
-{{--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">--}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -76,18 +76,20 @@
                 </div>
 
 
-                        <!-- Phim -->
-                        @foreach($movies as $movie)
-                            <div class="col-md-3 mb-4">
-                                <div class="card h-100">
-                                    <img src="{{ asset('storage/' . $movie->poster) }}" class="card-img-top" alt="{{ $movie->title }}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $movie->title }}</h5>
-                                            <button type="button" class="btn btn-primary"><a href="{{ route('movies.details', $movie->id) }}">Chi tiết</a></button>
-                                    </div>
+                <!-- Phim -->
+                @foreach($movies as $movie)
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <img src="{{ asset('storage/' . $movie->poster) }}" class="card-img-top" alt="{{ $movie->title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $movie->title }}</h5>
+                                        <button type="button" class="btn btn-primary"><a href="{{ route('movies.details', $movie->id) }}" style="color: white">Chi tiết</a></button>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
+                    </div>
+                @endforeach
 
             <section class="container featured-movies" id="suggestedSection" style="display:none;">
                 <h2 class="section-title">Dành cho bạn</h2>

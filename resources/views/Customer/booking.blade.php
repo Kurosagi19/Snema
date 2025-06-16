@@ -38,7 +38,7 @@
 <body>
     <!-- Header -->
     <header class="booking-header">
-        <a href="{{ route('') }}" class="back-btn">
+        <a href="{{ route('movies.details', $movie->id) }}" class="back-btn">
             <i class="fas fa-arrow-left"></i>
             Quay lại
         </a>
@@ -74,7 +74,7 @@
                     <div class="screen bg-dark text-white py-2 rounded">MÀN HÌNH</div>
                 </div>
 
-                <form method="POST" action="{{ route('bookings.store') }}" >
+                <form method="POST" action="{{ route('bookings.store') }}">
                     @csrf
 
                     {{-- Sơ đồ ghế dạng hàng ngang --}}
@@ -99,24 +99,19 @@
                             </div>
                         @endforeach
 
-                        <div class="text-center mt-4">
                             <button type="submit" class="btn btn-success px-4 py-2">
                                 Xác nhận đặt vé
                             </button>
                         </div>
-                    </div>
 
+                    {{-- Ẩn các thông tin cần gửi --}}
+                    <input type="hidden" name="movie_id" value="{{ $movie->id }}">
+                    <input type="hidden" name="room_id" value="{{ $showtime->room_id }}">
+                    <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
                 </form>
             </div>
         </div>
     </div>
-
-        {{-- Ẩn các thông tin cần gửi --}}
-        <input type="hidden" name="movie_id" value="{{ $movie->id }}">
-        <input type="hidden" name="room_id" value="{{ $showtime->room_id }}">
-        <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
-
-    </form>
 
     <!-- Footer -->
     <footer class="booking-footer">
