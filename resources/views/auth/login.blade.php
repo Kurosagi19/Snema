@@ -59,6 +59,21 @@
                     <i class='bx bxs-envelope'></i>
                 </div>
                 <div class="input-box">
+                    <select name="gender" id="gender">
+                        <option value="">Giới tính</option>
+                        <option value="1">Nam</option>
+                        <option value="2">Nữ</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <input type="date" name="birth_date" placeholder="Ngày sinh" required>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" name="phone_number" placeholder="Số điện thoại" required>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+                <div class="input-box">
                     <input type="password" name="password" placeholder="Mật khẩu" required>
                     <i class='bx bxs-lock-alt'></i>
                 </div>
@@ -67,13 +82,6 @@
                     <i class='bx bxs-lock-alt'></i>
                 </div>
                 <button type="submit" class="btn">Đăng ký</button>
-                <p>hoặc đăng ký bằng</p>
-                <div class="social-icons">
-                    <a href="#"><i class='bx bxl-google'></i></a>
-                    <a href="#"><i class='bx bxl-facebook'></i></a>
-                    <a href="#"><i class='bx bxl-github'></i></a>
-                    <a href="#"><i class='bx bxl-linkedin'></i></a>
-                </div>
             </form>
         </div>
 

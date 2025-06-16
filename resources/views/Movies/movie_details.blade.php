@@ -76,11 +76,6 @@
             </div>
         </div>
         @endif
-            <button type="button" class="btn btn-primary">
-                @foreach($showtimes as $showtime)
-                    <a href="{{ route('bookings.create', $showtime->id) }}" style="color: white">Đặt vé</a>
-                @endforeach
-            </button>
     </section>
 
     <!-- Lịch chiếu -->

@@ -33,7 +33,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-
+        return view('register');
     }
 
     /**
@@ -41,7 +41,16 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-
+        $password = bcrypt($request->password);
+        $array = [];
+        $array = Arr::add($array, 'email', $request->email);
+        $array = Arr::add($array, 'gender', $request->gender);
+        $array = Arr::add($array, 'phone_number', $request->phone_number);
+        $array = Arr::add($array, 'name', $request->name);
+        $array = Arr::add($array, 'birth_date', $request->birth_date);
+        $array = Arr::add($array, 'password', $password);
+        Customer::create($array);
+        return Redirect::route('login');
     }
 
     /**
