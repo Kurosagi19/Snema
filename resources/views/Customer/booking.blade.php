@@ -10,46 +10,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <style>
-        /* Ô ghế */
-        .seat-block {
+        .seat {
+            width: 42px;
+            height: 42px;
+            padding: 0;
             display: inline-flex;
-            width: 40px;
-            height: 40px;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             font-size: 14px;
             border-radius: 6px;
-            border: 1px solid #666;
             cursor: pointer;
-            transition: 0.2s ease;
-            user-select: none;
-            margin: 2px;
         }
-
-        /* Các loại ghế */
-        .seat-normal { background-color: #e0e0e0; }      /* Ghế thường */
-        .seat-vip    { background-color: #ffe066; }      /* Ghế VIP */
-        .seat-booked {
-            background-color: #999 !important;
-            cursor: not-allowed;
-            color: white;
-            pointer-events: none;
-        }
-
-        /* Khi checkbox được chọn */
-        .seat-input:checked + .seat-block {
-            background-color: #28a745 !important;
-            color: white;
-            border-color: #1c7c36;
-        }
-
-        /* Huy hiệu chú thích */
-        .legend-box {
-            width: 18px;
-            height: 18px;
-            border-radius: 4px;
-            border: 1px solid #666;
+        .screen {
+            max-width: 300px;
+            margin: auto;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 2px;
         }
     </style>
 
@@ -72,102 +51,72 @@
         <div class="logo">Snema</div>
     </header>
 
-    <form method="POST" action="{{ route('bookings.store') }}">
-        @csrf
+    @php
+        $seats_by_row = $seats->groupBy(fn($seat) => substr($seat->seat_code, 0, 1));
+    @endphp
 
-        <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
-        <input type="hidden" name="admin_id" value="{{ $admin_id }}">
-        <input type="hidden" name="customer_id" value="{{ $customer_id }}">
+    <div class="container mt-4">
+        <div class="row">
+            {{-- Cột trái: Thông tin phim --}}
+            <div class="col-md-4 mb-4">
+                <h5>Đặt vé: {{ $movie->title }}</h5>
 
-        <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-            <h2 class="text-lg font-semibold mb-4">Sơ đồ ghế</h2>
+                <img src="{{ asset('storage/' . $movie->poster) }}" class="img-fluid rounded mb-3" alt="Poster">
 
-            @php
-                $groupedSeats = $seats->groupBy(function($seat) {
-                    return substr($seat->seat_code, 0, 1); // Lấy ký tự hàng: A, B, C...
-                });
-            @endphp
+                <p><strong>Suất chiếu:</strong> lúc {{ \Carbon\Carbon::parse($showtime->start_time)->format('H:i:s') }}</p>
+                <p><strong>Ngày chiếu:</strong> {{ \Carbon\Carbon::parse($showtime->date)->format('d/m/Y') }}</p>
+            </div>
 
-            <div class="space-y-2" id="seat-map">
-                @foreach ($groupedSeats as $rowLabel => $seatsInRow)
-                    <div class="flex items-center gap-2">
-                        <div class="w-6 font-semibold">{{ $rowLabel }}</div>
-                        @foreach ($seatsInRow->sortBy('seat_number') as $seat)
-                            @php
-                                $isBooked = in_array($seat->id, $bookedSeatIds ?? []);
-                                $seatTypeClass = $seat->seat_type === 'vip' ? 'seat-vip' : 'seat-normal';
-                                $disabled = $isBooked ? 'disabled' : '';
-                            @endphp
+            {{-- Cột phải: Sơ đồ ghế --}}
+            <div class="col-md-8">
+                {{-- Dán sơ đồ ghế bạn đã làm ở đây --}}
+                <div class="text-center mb-3">
+                    <div class="screen bg-dark text-white py-2 rounded">MÀN HÌNH</div>
+                </div>
 
-                            <input type="checkbox"
-                                   name="seat_ids[]"
-                                   id="seat_{{ $seat->id }}"
-                                   value="{{ $seat->id }}"
-                                   class="seat-input hidden"
-                                {{ $disabled }}>
+                <form action="{{ route('bookings.store') }}" method="POST">
+                    @csrf
 
-                            <label for="seat_{{ $seat->id }}"
-                                   class="seat-block {{ $seatTypeClass }} {{ $isBooked ? 'seat-booked' : '' }}">
-                                {{ substr($seat->seat_code, 1) }}
-                            </label>
+                    {{-- Sơ đồ ghế dạng hàng ngang --}}
+                    <div class="d-flex flex-column gap-2 align-items-center">
+                        @foreach ($seats_by_row as $row => $row_seats)
+                            <div class="d-flex gap-2 justify-content-center align-items-center">
+                                <span class="fw-bold me-2">{{ $row }}</span>
+
+                                @foreach ($row_seats->sortBy('seat_number') as $seat)
+                                    @php
+                                        $is_booked = in_array($seat->id, $booked_seat_ids ?? []);
+                                        $seat_type = $seat->seat_type === 'vip' ? 'vip' : 'normal';
+                                    @endphp
+
+                                    <label class="seat btn {{ $seat_type === 'vip' ? 'btn-warning' : 'btn-outline-secondary' }} {{ $is_booked ? 'disabled' : '' }}">
+                                        @if(!$is_booked)
+                                            <input type="checkbox" name="seat_ids[]" value="{{ $seat->id }}" class="d-none seat-checkbox">
+                                        @endif
+                                        {{ substr($seat->seat_code, 1) }}
+                                    </label>
+                                @endforeach
+                            </div>
                         @endforeach
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success px-4 py-2">
+                                Xác nhận đặt vé
+                            </button>
+                        </div>
                     </div>
-                @endforeach
-            </div>
 
-            <div class="mt-4">
-                <strong>Ghế đã chọn:</strong>
-                <span id="selected-seats" class="text-blue-600 text-sm"></span>
-            </div>
-
-            <div class="flex items-center gap-4 mt-6 text-sm">
-                <div class="flex items-center gap-1"><div class="legend-box bg-gray-300"></div> Ghế thường</div>
-                <div class="flex items-center gap-1"><div class="legend-box bg-yellow-400"></div> Ghế VIP</div>
-                <div class="flex items-center gap-1"><div class="legend-box bg-gray-500"></div> Đã đặt</div>
-                <div class="flex items-center gap-1"><div class="legend-box bg-green-500"></div> Đang chọn</div>
+                </form>
             </div>
         </div>
+    </div>
 
+        {{-- Ẩn các thông tin cần gửi --}}
+        <input type="hidden" name="movie_id" value="{{ $movie->id }}">
+        <input type="hidden" name="room_id" value="{{ $showtime->room_id }}">
+        <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
 
-        <label>Phương thức thanh toán:</label>
-        <select name="payment_id" class="form-control" required>
-            @foreach ($payment_options as $option)
-                <option value="{{ $option->id }}">
-                    @if($option->option == 1)
-                        Thanh toán online
-                    @elseif($option->option == 2)
-                        Thanh toán tại quầy
-                    @endif
-                </option>
-            @endforeach
-        </select>
-
-        <label>Chọn mã khuyến mãi:</label>
-        <select name="promotion_id" class="form-control">
-            <option value="">-- Không áp dụng --</option>
-            @foreach ($promotions as $promo)
-                <option value="{{ $promo->id }}">
-                @if($promo->promotion_type == 1)
-                    Giảm 25%
-                @elseif($promo->promotion_type == 2)
-                    Giảm 50%
-                @endif
-                </option>
-            @endforeach
-        </select>
-
-        <label>Chọn combo đồ ăn:</label>
-        @foreach ($snacks as $snack)
-            <div>
-                <input type="checkbox" name="booking_snacks_id[]" value="{{ $snack->id }}">
-                {{ $snack->name }} – {{ $snack->price }}đ
-            </div>
-        @endforeach
-
-        <button type="submit" class="btn btn-success mt-3">Xác nhận đặt vé</button>
     </form>
-
-
 
     <!-- Footer -->
     <footer class="booking-footer">
@@ -186,21 +135,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const checkboxes = document.querySelectorAll('.seat-input');
-            const selectedSeatsDisplay = document.getElementById('selected-seats');
-
-            function updateSelectedSeats() {
-                const selected = Array.from(checkboxes)
-                    .filter(cb => cb.checked)
-                    .map(cb => cb.nextElementSibling.innerText.trim()); // lấy mã ghế từ label
-                selectedSeatsDisplay.textContent = selected.join(', ');
-            }
+            const checkboxes = document.querySelectorAll('.seat-checkbox');
 
             checkboxes.forEach(cb => {
-                cb.addEventListener('change', updateSelectedSeats);
+                cb.addEventListener('change', function () {
+                    const label = this.closest('label');
+                    label.classList.toggle('btn-success', this.checked);
+                    label.classList.toggle('btn-outline-secondary', !this.checked);
+                });
             });
-
-            updateSelectedSeats(); // load sẵn nếu có giá trị
         });
     </script>
 

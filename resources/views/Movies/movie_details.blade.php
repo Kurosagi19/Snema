@@ -49,7 +49,7 @@
     <section class="movie-detail">
         @if($movies)
         <div class="movie-poster">
-            <img src="{{ asset('storage/' . $movies->poster) }}" alt="Avengers: Endgame">
+            <img src="{{ asset('storage/' . $movies->poster) }}" alt="{{ $movies->title }}">
         </div>
         <div class="movie-info">
             <h1>{{ $movies->title }}</h1>
@@ -95,15 +95,25 @@
             @endforeach
         </div>
 
-        <div class="showtime-list">
-            <h2>Giờ chiếu</h2>
-            <label for="showtime-select">Chọn giờ chiếu:</label>
-                <select id="showtime-select">
-                    @foreach($showtimes as $showtime)
-                        <option value="{{ $showtime->id }}">{{ $showtime->start_time }} - {{ $showtime->end_time }}</option>
-                    @endforeach
-                </select>
-        </div>
+        <h4 class="mt-4">Suất chiếu</h4>
+
+        <form action="{{ route('bookings.create') }}" method="GET">
+            @csrf
+
+            <label for="showtime_id">Chọn suất chiếu:</label>
+            <select name="showtime_id" id="showtime_id" class="form-select" required>
+                <option value="">-- Chọn suất chiếu --</option>
+                @foreach ($movies->showtimes as $showtime)
+                    <option value="{{ $showtime->id }}">
+                        {{ \Carbon\Carbon::parse($showtime->date)->format('d/m/Y') }} –
+                        {{ \Carbon\Carbon::parse($showtime->start_time)->format('H:i') }}
+                    </option>
+                @endforeach
+            </select>
+
+            <input type="hidden" name="movie_id" value="{{ $movies->id }}">
+            <button type="submit" class="btn btn-primary mt-2">Đặt vé</button>
+        </form>
     </section>
 
     <!-- Footer (giống trang chủ) -->

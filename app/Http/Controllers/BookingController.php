@@ -5,11 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
+use App\Models\BookingDetail;
+use App\Models\BookingSnack;
+use App\Models\Movie;
 use App\Models\PaymentOption;
 use App\Models\Promotion;
 use App\Models\Seat;
 use App\Models\Showtime;
 use App\Models\Snack;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -24,25 +30,23 @@ class BookingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Showtime $showtime)
+    public function create(Request $request)
     {
-        $showtime->load('rooms', 'movies');
-        $seats = Seat::all();
-        $payment_options = PaymentOption::all();        // bảng payment_options
-        $promotions = Promotion::all();                // mã khuyến mãi
-        $snacks = Snack::all();                        // danh sách combo
-        $admin_id = auth()->user()->id ?? null;         // hoặc dùng Auth::guard('admin')->id()
-        $customer_id = auth()->id();                    // nếu người dùng đang đăng nhập
+        $payment_options = PaymentOption::all();
+        $promotions = Promotion::all();
+        $snacks = Snack::all();
+        $showtime = Showtime::with('room')->findOrFail($request->showtime_id);
+        $movie = Movie::findOrFail($request->movie_id);
 
-        return view('Customer.booking', compact(
-            'showtime',
-            'seats',
-            'payment_options',
-            'promotions',
-            'snacks',
-            'admin_id',
-            'customer_id',
-        ));
+        // Lấy tất cả ghế của phòng chiếu trong suất chiếu đó
+        $seats = Seat::where('room_id', $showtime->room_id)->get();
+
+        // Lấy danh sách seat_id đã được đặt trong booking_details
+        $booked_seat_ids = BookingDetail::whereHas('booking', function ($query) use ($showtime) {
+            $query->where('showtime_id', $showtime->id);
+        })->pluck('seat_id')->toArray();
+
+        return view('Customer.booking', compact('movie', 'showtime', 'seats', 'booked_seat_ids', 'payment_options', 'promotions', 'snacks'));
     }
 
     /**
@@ -50,7 +54,63 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request)
     {
-        //
+        $request->validate([
+            'seat_ids' => 'required|array|min:1',
+            'seat_ids.*' => 'exists:seats,id',
+            'showtime_id' => 'required|exists:showtimes,id',
+            'movie_id' => 'required|exists:movies,id',
+            'room_id' => 'required|exists:rooms,id',
+            'payment_id' => 'required|exists:payment_options,id',
+            'promotion_id' => 'nullable|exists:promotions,id',
+        ]);
+
+        $user_id = Auth::id();
+        $total_amount = 0;
+        $discount_amount = 0;
+
+        // 1. Tính tổng tiền
+        foreach ($request->seat_ids as $seat_id) {
+            $seat = Seat::find($seat_id);
+            if (!$seat) continue;
+
+            $seat_price = $seat->seat_type === 'vip' ? 50000 : 45000;
+            $total_amount += $seat_price;
+        }
+
+        // 2. Tính giảm giá nếu có
+        if ($request->promotion_id) {
+            $promotion = Promotion::find($request->promotion_id);
+            if ($promotion) {
+                $discount_amount = $total_amount * ($promotion->discount_percent / 100);
+            }
+        }
+
+        $final_amount = $total_amount - $discount_amount;
+
+        // 3. Tạo booking
+        $booking = Booking::create([
+            'showtime_id'     => $request->showtime_id,
+            'movie_id'        => $request->movie_id,
+            'room_id'         => $request->room_id,
+            'customer_id'     => $user_id,
+            'payment_id'      => $request->payment_id,
+            'promotion_id'    => $request->promotion_id,
+            'total_amount'    => $total_amount,
+            'discount_amount' => $discount_amount,
+            'final_amount'    => $final_amount,
+            'status'          => 'confirmed',
+        ]);
+
+        // 4. Tạo từng dòng booking_detail cho mỗi ghế
+        foreach ($request->seat_ids as $seat_id) {
+            BookingDetail::create([
+                'booking_id'   => $booking->id,
+                'seat_id'      => $seat_id,
+                'booking_time' => Carbon::now(),
+            ]);
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Đặt vé thành công!');
     }
 
     /**
@@ -80,8 +140,11 @@ class BookingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Booking $booking)
+    public function destroy($id)
     {
-        //
+        $booking = Booking::findOrFail($id);
+        $booking->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Đã xoá vé thành công!');
     }
 }

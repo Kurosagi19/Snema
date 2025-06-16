@@ -21,7 +21,7 @@ Route::prefix('/customer')->group(function() {
     Route::get('/', [\App\Http\Controllers\CustomerController::class, 'index'])->name('customer.index');
     Route::get('/movies', [\App\Http\Controllers\MovieController::class, 'index'])->name('movies.index');
     Route::get('/movies/{id}', [\App\Http\Controllers\MovieController::class, 'details'])->name('movies.details');
-    Route::get('/bookings/create/{showtimes}', [BookingController::class, 'create'])->name('bookings.create');
+    Route::get('/bookings/create/', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings/create/', [BookingController::class, 'store'])->name('bookings.store');
 });
 
@@ -49,6 +49,8 @@ Route::prefix('/admin')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('auth.login-admin');
     Route::post('/login', [\App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login.submit');
     Route::post('/logout', [\App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
+    Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+
 
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', function () {
