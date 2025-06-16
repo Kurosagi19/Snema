@@ -98,7 +98,7 @@ class BookingController extends Controller
             'total_amount'    => $total_amount,
             'discount_amount' => $discount_amount,
             'final_amount'    => $final_amount,
-            'status'          => 'confirmed',
+            'status'          => '1',
         ]);
 
         // 4. Tạo từng dòng booking_detail cho mỗi ghế
@@ -110,7 +110,7 @@ class BookingController extends Controller
             ]);
         }
 
-        return redirect()->route('dashboard')->with('success', 'Đặt vé thành công!');
+        return redirect()->route('customer.index')->with('success', 'Đặt vé thành công!');
     }
 
     /**

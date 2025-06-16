@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BookingController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GenreMovieController;
 use App\Http\Controllers\MovieController;
@@ -21,8 +20,8 @@ Route::prefix('/customer')->group(function() {
     Route::get('/', [\App\Http\Controllers\CustomerController::class, 'index'])->name('customer.index');
     Route::get('/movies', [\App\Http\Controllers\MovieController::class, 'index'])->name('movies.index');
     Route::get('/movies/{id}', [\App\Http\Controllers\MovieController::class, 'details'])->name('movies.details');
-    Route::get('/bookings/create/', [BookingController::class, 'create'])->name('bookings.create');
-    Route::post('/bookings/create/', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'create'])->name('bookings.create');
+    Route::post('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
 });
 
 Route::get('/admin/create', [\App\Http\Controllers\AdminController::class, 'create'])->name('admin.create');

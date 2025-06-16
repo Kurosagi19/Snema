@@ -38,7 +38,7 @@
 <body>
     <!-- Header -->
     <header class="booking-header">
-        <a href="index.blade.php" class="back-btn">
+        <a href="{{ route('') }}" class="back-btn">
             <i class="fas fa-arrow-left"></i>
             Quay lại
         </a>
@@ -74,7 +74,7 @@
                     <div class="screen bg-dark text-white py-2 rounded">MÀN HÌNH</div>
                 </div>
 
-                <form action="{{ route('bookings.store') }}" method="POST">
+                <form method="POST" action="{{ route('bookings.store') }}" >
                     @csrf
 
                     {{-- Sơ đồ ghế dạng hàng ngang --}}
