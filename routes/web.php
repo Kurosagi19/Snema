@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GenreMovieController;
 use App\Http\Controllers\MovieController;
@@ -11,23 +9,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::post('/register', [RegisterController::class, 'register'])->name('register');
-
-Route::prefix('/customer')->group(function() {
-    Route::get('/', [\App\Http\Controllers\CustomerController::class, 'index'])->name('customer.index');
-    Route::get('/movies', [\App\Http\Controllers\MovieController::class, 'index'])->name('movies.index');
-    Route::get('/movies/{id}', [\App\Http\Controllers\MovieController::class, 'details'])->name('movies.details');
+Route::middleware('loginCustomer')->prefix('/customer')->group(function() {
     Route::get('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/logout', [\App\Http\Controllers\CustomerController::class, 'logout'])->name('customers.logout');
+});
+
+Route::prefix('/customer')->group(function() {
+    Route::get('/login', [\App\Http\Controllers\CustomerController::class, 'login'])->name('customers.login');
+    Route::post('/login_process', [\App\Http\Controllers\CustomerController::class, 'loginProcess'])->name('customers.loginProcess');
+    Route::get('/index', [\App\Http\Controllers\CustomerController::class, 'index'])->name('customer.index');
+    Route::get('/movies', [\App\Http\Controllers\MovieController::class, 'index'])->name('movies.index');
+    Route::get('/movies/{id}', [\App\Http\Controllers\MovieController::class, 'details'])->name('movies.details');
 });
 
 Route::get('/admin/create', [\App\Http\Controllers\AdminController::class, 'create'])->name('admin.create');
 Route::post('/admin/create', [\App\Http\Controllers\AdminController::class, 'store'])->name('admin.store');
 
-Route::prefix('/admin')->group(function () {
+Route::middleware('loginAdmin')->prefix('/admin')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/movies', [\App\Http\Controllers\AdminController::class, 'movies'])->name('admin.movies');
     Route::get('/movies/create', [\App\Http\Controllers\MovieController::class, 'create'])->name('movies.create');
@@ -43,20 +42,13 @@ Route::prefix('/admin')->group(function () {
     Route::get('/genres/{id}/edit', [GenreController::class, 'edit'])->name('genres.edit');
     Route::put('/genres/{id}', [GenreController::class, 'update'])->name('genres.update');
     Route::get('/snacks', [\App\Http\Controllers\SnackController::class, 'index'])->name('snacks.index');
+    Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::get('/logout', [\App\Http\Controllers\AdminController::class, 'logout'])->name('admin.logout');
 });
 
-Route::prefix('/admin')->group(function () {
-//    Route::get('/login', [\App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('auth.login-admin');
-//    Route::post('/login', [\App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login.submit');
-//    Route::post('/logout', [\App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
-    Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'destroy'])->name('bookings.destroy');
-
-
-    Route::prefix('/admin')->group(function () {
-        Route::get('/dashboard', function () {
-            return 'Admin dashboard';
-        })->name('admin.dashboard');
-    });
+Route::prefix('/admin')->group(function() {
+    Route::get('/login', [\App\Http\Controllers\AdminController::class, 'login'])->name('admin.login');
+    Route::post('/login_process', [\App\Http\Controllers\AdminController::class, 'loginProcess'])->name('admin.loginProcess');
 });
 
 

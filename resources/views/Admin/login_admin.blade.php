@@ -14,7 +14,7 @@
 <body>
 <div class="container">
     <div class="form-box login">
-        <form method="POST" action="{{ route('admin.login.submit') }}">
+        <form method="POST" action="{{ route('admin.loginProcess') }}">
             @csrf
             <h1>Administrator</h1>
 

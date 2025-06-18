@@ -14,7 +14,7 @@
 <body>
     <div class="container">
         <div class="form-box login">
-            <form method="POST" action="{{ url('/login') }}">
+            <form method="POST" action="{{ route('customers.loginProcess') }}">
                 @csrf
                 <h1>Đăng nhập</h1>
 

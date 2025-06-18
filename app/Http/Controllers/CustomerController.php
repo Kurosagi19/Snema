@@ -8,7 +8,9 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Genre;
 use App\Models\GenreMovie;
 use App\Models\Movie;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
@@ -83,5 +85,40 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    public function login() {
+        return view('Customer.login_customer');
+    }
+
+    public function loginProcess(Request $request)
+    {
+        // Validate dữ liệu đầu vào
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|min:6',
+        ]);
+
+        // Thử đăng nhập bằng guard 'admins'
+        if (Auth::guard('customers')->attempt($credentials)) {
+            // Nếu thành công: lưu session login và chuyển hướng về dashboard
+            $request->session()->regenerate(); // chống session fixation
+
+            return redirect()->intended(route('customers.index'));
+        }
+
+        // Nếu thất bại: quay lại và thông báo lỗi
+        return back()->withErrors([
+            'email' => 'Email hoặc mật khẩu không chính xác.',
+        ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('customers')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('customers.login');
     }
 }

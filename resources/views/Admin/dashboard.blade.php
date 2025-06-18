@@ -16,7 +16,7 @@
             <h2>Admin Panel</h2>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('Admin.movies') }}"><i class="fas fa-film"></i> Quản lý phim</a></li>
+            <li><a href="{{ route('admin.movies') }}"><i class="fas fa-film"></i> Quản lý phim</a></li>
             <li><a href=""><i class="fas fa-tags"></i> Quản lý thể loại</a></li>
             <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
             <li><a href=""><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
@@ -29,7 +29,7 @@
     <main class="main-content">
         <div class="page-header">
             <h1 class="page-title">Trang quản trị</h1>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
             <button class="btn btn-primary">
                 <i class="fas fa-sign-out"></i> Đăng xuất
@@ -40,7 +40,7 @@
         <div class="page-header">
             <h1 class="page-title">Quản lý admin</h1>
             <button class="btn btn-primary" onclick="openModalWithData('admin')">
-                <i class="fas fa-plus"></i> <a href="{{ route('Admin.create') }}" style="color: white">Thêm admin</a>
+                <i class="fas fa-plus"></i> <a href="{{ route('admin.create') }}" style="color: white">Thêm admin</a>
             </button>
         </div>
 

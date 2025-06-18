@@ -8,7 +8,9 @@ use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Movie;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class AdminController extends Controller
@@ -82,5 +84,41 @@ class AdminController extends Controller
     public function destroy(Admin $admin)
     {
         //
+    }
+
+    // Function login
+    public function login() {
+        return view('Admin.login_admin');
+    }
+
+    public function loginProcess(Request $request)
+    {
+        // Validate dữ liệu đầu vào
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|min:6',
+        ]);
+
+        // Thử đăng nhập bằng guard 'admins'
+        if (Auth::guard('admins')->attempt($credentials)) {
+            // Nếu thành công: lưu session login và chuyển hướng về dashboard
+            $request->session()->regenerate(); // chống session fixation
+
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
+        // Nếu thất bại: quay lại và thông báo lỗi
+        return back()->withErrors([
+            'email' => 'Email hoặc mật khẩu không chính xác.',
+        ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('admins')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login');
     }
 }
