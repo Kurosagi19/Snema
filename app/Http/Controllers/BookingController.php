@@ -54,6 +54,9 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request)
     {
+        // Mở dòng dưới để test xem đã lấy được dữ liệu chưa
+//        dd($request->all());
+
         $request->validate([
             'seat_ids' => 'required|array|min:1',
             'seat_ids.*' => 'exists:seats,id',
@@ -64,9 +67,9 @@ class BookingController extends Controller
             'promotion_id' => 'nullable|exists:promotions,id',
         ]);
 
-        $user_id = Auth::id();
-        $total_amount = 0;
-        $discount_amount = 0;
+//        $user_id = Auth::id();
+        $total_price = 0;
+        $discount_price = 0;
 
         // 1. Tính tổng tiền
         foreach ($request->seat_ids as $seat_id) {
@@ -74,30 +77,35 @@ class BookingController extends Controller
             if (!$seat) continue;
 
             $seat_price = $seat->seat_type === 'vip' ? 50000 : 45000;
-            $total_amount += $seat_price;
+            $total_price += $seat_price;
         }
 
         // 2. Tính giảm giá nếu có
         if ($request->promotion_id) {
             $promotion = Promotion::find($request->promotion_id);
-            if ($promotion) {
-                $discount_amount = $total_amount * ($promotion->discount_percent / 100);
+            $promotion_id = $promotion ? (int) $promotion->id : null;
+            if ($promotion && $promotion->promotion_type == 1) {
+                $discount_price = $total_price * (25 / 100);
+                } elseif ($promotion && $promotion->promotion_type == 2) {
+                    $discount_price = $total_price * (50 / 100);
             }
         }
 
-        $final_amount = $total_amount - $discount_amount;
+        $final_price = $total_price - $discount_price;
 
         // 3. Tạo booking
         $booking = Booking::create([
             'showtime_id'     => $request->showtime_id,
             'movie_id'        => $request->movie_id,
             'room_id'         => $request->room_id,
-            'customer_id'     => $user_id,
+//            'customer_id'     => $user_id,
+            'customer_id' => $request->customer_id,
+            'admin_id' => $request->admin_id,
             'payment_id'      => $request->payment_id,
-            'promotion_id'    => $request->promotion_id,
-            'total_amount'    => $total_amount,
-            'discount_amount' => $discount_amount,
-            'final_amount'    => $final_amount,
+            'promotion_id'    => $promotion_id,
+            'total_price'    => $total_price,
+            'discount_price' => $discount_price,
+            'final_price'    => $final_price,
             'status'          => '1',
         ]);
 
@@ -107,6 +115,7 @@ class BookingController extends Controller
                 'booking_id'   => $booking->id,
                 'seat_id'      => $seat_id,
                 'booking_time' => Carbon::now(),
+                'price' => $final_price,
             ]);
         }
 

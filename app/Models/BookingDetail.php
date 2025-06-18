@@ -9,6 +9,8 @@ class BookingDetail extends Model
 {
     /** @use HasFactory<\Database\Factories\BookingDetailFactory> */
     use HasFactory;
+    protected $fillable = ['id', 'booking_time', 'price', 'seat_id', 'booking_id'];
+    public $timestamps = false;
 
     public function booking()
     {

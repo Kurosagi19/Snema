@@ -99,14 +99,43 @@
                             </div>
                         @endforeach
 
+                        <div class="payment_options">
+                            <select name="payment_id" id="payment_id">
+                            @foreach($payment_options as $payment_option)
+                                    <option value="{{ $payment_option->id }}">{{ $payment_option->option }}</option>
+                            @endforeach
+                            </select>
+                        </div>
+
+                            <div class="promotions">
+                                <select name="promotion_id" id="promotion_id">
+                                    <option value="">-- Voucher giảm giá--</option>
+                                    @foreach($promotions as $promotion)
+                                        <option value="{{ $promotion->id }}">
+
+                                            @if($promotion->promotion_type == 1)
+                                                Giảm 25%
+                                            @elseif($promotion->promotion_type == 2)
+                                                Giảm 50%
+                                            @endif
+
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                         <button type="submit" class="btn btn-success px-4 py-2">Xác nhận đặt vé</button>
+
+                            {{-- Ẩn các thông tin cần gửi --}}
+                            <input type="hidden" name="movie_id" value="{{ $movie->id }}">
+                            <input type="hidden" name="room_id" value="{{ $showtime->room_id }}">
+                            <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
+
+                            {{-- Demo --}}
+                            <input type="hidden" name="customer_id" value="1">
+                            <input type="hidden" name="admin_id" value="1">
                     </div>
                 </form>
-
-                    {{-- Ẩn các thông tin cần gửi --}}
-                    <input type="hidden" name="movie_id" value="{{ $movie->id }}">
-                    <input type="hidden" name="room_id" value="{{ $showtime->room_id }}">
-                    <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
 
             </div>
         </div>
