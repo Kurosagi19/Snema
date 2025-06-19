@@ -9,7 +9,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('loginCustomer')->prefix('/customer')->group(function() {
+Route::middleware(\App\Http\Middleware\loginCustomer::class)->prefix('/customer')->group(function() {
     Route::get('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
     Route::get('/logout', [\App\Http\Controllers\CustomerController::class, 'logout'])->name('customers.logout');
@@ -26,7 +26,7 @@ Route::prefix('/customer')->group(function() {
 Route::get('/admin/create', [\App\Http\Controllers\AdminController::class, 'create'])->name('admin.create');
 Route::post('/admin/create', [\App\Http\Controllers\AdminController::class, 'store'])->name('admin.store');
 
-Route::middleware('loginAdmin')->prefix('/admin')->group(function () {
+Route::middleware(\App\Http\Middleware\loginAdmin::class)->prefix('/admin')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/movies', [\App\Http\Controllers\AdminController::class, 'movies'])->name('admin.movies');
     Route::get('/movies/create', [\App\Http\Controllers\MovieController::class, 'create'])->name('movies.create');
@@ -43,7 +43,7 @@ Route::middleware('loginAdmin')->prefix('/admin')->group(function () {
     Route::put('/genres/{id}', [GenreController::class, 'update'])->name('genres.update');
     Route::get('/snacks', [\App\Http\Controllers\SnackController::class, 'index'])->name('snacks.index');
     Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'destroy'])->name('bookings.destroy');
-    Route::get('/logout', [\App\Http\Controllers\AdminController::class, 'logout'])->name('admin.logout');
+    Route::post('/logout', [\App\Http\Controllers\AdminController::class, 'logout'])->name('admin.logout');
 });
 
 Route::prefix('/admin')->group(function() {

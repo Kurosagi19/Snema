@@ -47,7 +47,7 @@
     </div>
 
     <div class="form-box register">
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="">
             @csrf
             <h1>Đăng ký</h1>
             <div class="input-box">

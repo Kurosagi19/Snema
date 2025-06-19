@@ -59,44 +59,6 @@
                         <th scope="row">{{ $admin -> id }}</th>
                         <td>{{ $admin -> name }}</td>
                         <td>{{ $admin->email }}</td>
-
-                        <td>
-                            <a class="btn btn-warning btn-lg my-1" href=""><i
-                                    class="fa-regular fa-pen-to-square fa-shake"></i></a>
-                            <button type="button" class="btn btn-danger btn-lg my-1" data-bs-toggle="modal"
-                                    data-bs-target="#myModal{{ $admin->id }}"><i
-                                    class="fa-solid fa-dumpster fa-shake"></i></button>
-
-                            {{--Modal--}}
-                            <div class="modal fade" id="myModal{{ $admin->id }}">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Xác nhận xóa</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            Bạn có chắc chắn muốn xóa mục này?
-                                        </div>
-
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <div class="modal-footer">
-                                                <button class="btn btn-light" data-bs-dismiss="modal">Không</button>
-                                                <form method="post" action="{{ route('Movies.destroy', $admin->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger">Có</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
                     </tr>
                 @endforeach
                 </tbody>

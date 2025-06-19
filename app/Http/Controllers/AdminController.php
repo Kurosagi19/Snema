@@ -11,6 +11,7 @@ use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 
 class AdminController extends Controller
@@ -51,7 +52,7 @@ class AdminController extends Controller
         $array = Arr::add($array, 'email', $request->email);
         $array = Arr::add($array, 'password', $password);
         Admin::create($array);
-        return Redirect::route('Admin.dashboard');
+        return Redirect::route('admin.dashboard');
     }
 
     /**
@@ -93,24 +94,23 @@ class AdminController extends Controller
 
     public function loginProcess(Request $request)
     {
-        // Validate dữ liệu đầu vào
         $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|min:6',
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
 
-        // Thử đăng nhập bằng guard 'admins'
-        if (Auth::guard('admins')->attempt($credentials)) {
-            // Nếu thành công: lưu session login và chuyển hướng về dashboard
-            $request->session()->regenerate(); // chống session fixation
+        $admin = Admin::where('email', $credentials['email'])->first();
 
-            return redirect()->intended(route('admin.dashboard'));
+        if (!$admin || !Hash::check($credentials['password'], $admin->password)) {
+            return back()->withErrors([
+                'email' => 'Email hoặc mật khẩu không đúng.',
+            ]);
         }
 
-        // Nếu thất bại: quay lại và thông báo lỗi
-        return back()->withErrors([
-            'email' => 'Email hoặc mật khẩu không chính xác.',
-        ])->onlyInput('email');
+        // ✅ Đăng nhập thủ công bằng session
+        session(['admin_id' => $admin->id]);
+
+        return redirect()->route('admin.dashboard');
     }
 
     public function logout(Request $request)
