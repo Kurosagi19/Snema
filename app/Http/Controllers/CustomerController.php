@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 
 class CustomerController extends Controller
@@ -35,7 +37,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('register');
+        //
     }
 
     /**
@@ -52,7 +54,7 @@ class CustomerController extends Controller
         $array = Arr::add($array, 'birth_date', $request->birth_date);
         $array = Arr::add($array, 'password', $password);
         Customer::create($array);
-        return Redirect::route('login');
+        return Redirect::route('customers.login');
     }
 
     /**
@@ -93,29 +95,28 @@ class CustomerController extends Controller
 
     public function loginProcess(Request $request)
     {
-        // Validate dữ liệu đầu vào
         $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|min:6',
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
 
-        // Thử đăng nhập bằng guard 'admins'
-        if (Auth::guard('customers')->attempt($credentials)) {
-            // Nếu thành công: lưu session login và chuyển hướng về dashboard
-            $request->session()->regenerate(); // chống session fixation
+        $customer = Customer::where('email', $credentials['email'])->first();
 
-            return redirect()->intended(route('customers.index'));
+        if (!$customer || !Hash::check($credentials['password'], $customer->password)) {
+            return back()->withErrors([
+                'email' => 'Email hoặc mật khẩu không đúng.',
+            ]);
         }
 
-        // Nếu thất bại: quay lại và thông báo lỗi
-        return back()->withErrors([
-            'email' => 'Email hoặc mật khẩu không chính xác.',
-        ])->onlyInput('email');
+        // ✅ Đăng nhập thủ công bằng session
+        session(['customer_id' => $customer->id]);
+
+        return redirect()->route('customers.index');
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('customers')->logout();
+        session()->forget('customer_id');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

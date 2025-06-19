@@ -17,7 +17,7 @@
         <div class="container">
             <a href="index.blade.php" class="logo">Snema</a>
             <nav>
-                <a href="{{ route('customer.index') }}" class="active">Trang chủ</a>
+                <a href="{{ route('customers.index') }}" class="active">Trang chủ</a>
                 <a href="">Diễn đàn</a>
                 <a href="">Phim</a>
                 <a href="">Rạp</a>
@@ -26,7 +26,7 @@
                 <a href="">Liên hệ</a>
             </nav>
             <div class="auth-buttons">
-                <a href="{{ route('login') }}" class="login-btn">Đăng nhập</a>
+                <a href="{{ route('customers.login') }}" class="login-btn">Đăng nhập</a>
             </div>
         </div>
     </header>
@@ -124,129 +124,9 @@
                     <li><a href="#">Khuyến mãi</a></li>
                 </ul>
             </div>
-            <div>
-                <div class="footer-title">Đăng ký nhận tin</div>
-                <form class="newsletter-form" id="newsletterForm">
-                    <input type="email" class="newsletter-input" placeholder="Email của bạn" required>
-                    <button type="submit" class="newsletter-btn">Đăng ký</button>
-                </form>
-                <div id="newsletterMsg" style="margin-top:0.7rem;color:#ff4d4d;font-weight:500;display:none;">Đăng ký thành công!</div>
-            </div>
-        </div>
         <div style="text-align:center;margin-top:2rem;color:#bbb;font-size:0.95rem;">&copy; 2024 Snema. All rights reserved.</div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
-    <script>
-        var swiper = new Swiper('.swiper', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            autoplay: {
-                delay: 3500,
-                disableOnInteraction: false,
-            },
-        });
-        const movieList = [
-            "Avengers: Endgame", "Joker", "Parasite", "Fast & Furious 9", "Minions", "Spider-Man: No Way Home", "Thanh Gươm Diệt Quỷ", "Em và Trịnh", "Lật Mặt 6", "Conan: Tàu Ngầm Sắt Màu Đen"
-        ];
-        const searchInput = document.getElementById('searchInput');
-        const autocompleteList = document.getElementById('autocompleteList');
-        searchInput.addEventListener('input', function() {
-            const val = this.value.trim().toLowerCase();
-            if (!val) {
-                autocompleteList.style.display = 'none';
-                return;
-            }
-            const suggestions = movieList.filter(m => m.toLowerCase().includes(val));
-            if (suggestions.length === 0) {
-                autocompleteList.style.display = 'none';
-                return;
-            }
-            autocompleteList.innerHTML = suggestions.map(m => `<div class='autocomplete-suggestion'>${m}</div>`).join('');
-            autocompleteList.style.display = 'block';
-        });
-        autocompleteList.addEventListener('click', function(e) {
-            if (e.target.classList.contains('autocomplete-suggestion')) {
-                searchInput.value = e.target.textContent;
-                autocompleteList.style.display = 'none';
-            }
-        });
-        document.addEventListener('click', function(e) {
-            if (!autocompleteList.contains(e.target) && e.target !== searchInput) {
-                autocompleteList.style.display = 'none';
-            }
-        });
-        document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            document.getElementById('newsletterMsg').style.display = 'block';
-            setTimeout(()=>{
-                document.getElementById('newsletterMsg').style.display = 'none';
-            }, 2500);
-            this.reset();
-        });
-        const tabs = document.querySelectorAll('.movie-tab');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                // Lọc phim theo thể loại ở đây (JS hoặc backend)
-            });
-        });
-        document.getElementById('cinemaSelect').addEventListener('change', function() {
-            // Lọc phim theo rạp ở đây (JS hoặc backend)
-        });
-        function renderPagination(containerId, totalPages, currentPage) {
-            const container = document.getElementById(containerId);
-            let html = '';
-            for(let i=1;i<=totalPages;i++) {
-                html += `<a href="#" class="${i===currentPage?'active':''}">${i}</a>`;
-            }
-            container.innerHTML = html;
-        }
-        renderPagination('nowShowingPagination', 5, 1);
-        renderPagination('upcomingPagination', 3, 1);
-        // Render movie cards, review cards... (demo, có thể thay bằng backend)
-        // ...
-        // Khởi tạo Swiper cho phim đang chiếu
-        var nowShowingSwiper = new Swiper('.now-showing-swiper', {
-            slidesPerView: 4,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            }
-        });
-
-        // Khởi tạo Swiper cho phim sắp chiếu
-        var upcomingSwiper = new Swiper('.upcoming-swiper', {
-            slidesPerView: 4,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            }
-        });
-    </script>
 </body>
 
 </html>

@@ -18,13 +18,16 @@ Route::middleware(\App\Http\Middleware\loginCustomer::class)->prefix('/customer'
 Route::prefix('/customer')->group(function() {
     Route::get('/login', [\App\Http\Controllers\CustomerController::class, 'login'])->name('customers.login');
     Route::post('/login_process', [\App\Http\Controllers\CustomerController::class, 'loginProcess'])->name('customers.loginProcess');
-    Route::get('/index', [\App\Http\Controllers\CustomerController::class, 'index'])->name('customer.index');
+    Route::get('/index', [\App\Http\Controllers\CustomerController::class, 'index'])->name('customers.index');
     Route::get('/movies', [\App\Http\Controllers\MovieController::class, 'index'])->name('movies.index');
     Route::get('/movies/{id}', [\App\Http\Controllers\MovieController::class, 'details'])->name('movies.details');
 });
 
 Route::get('/admin/create', [\App\Http\Controllers\AdminController::class, 'create'])->name('admin.create');
 Route::post('/admin/create', [\App\Http\Controllers\AdminController::class, 'store'])->name('admin.store');
+
+Route::get('/customer/create', [\App\Http\Controllers\AdminController::class, 'create'])->name('admin.create');
+Route::post('/customer/create', [\App\Http\Controllers\CustomerController::class, 'store'])->name('customers.store');
 
 Route::middleware(\App\Http\Middleware\loginAdmin::class)->prefix('/admin')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');

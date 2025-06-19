@@ -16,14 +16,14 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('customer.index') }}">Snema</a>
+            <a class="navbar-brand" href="{{ route('customers.index') }}">Snema</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('customer.index') }}">Trang chủ</a>
+                        <a class="nav-link" href="{{ route('customers.index') }}">Trang chủ</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="">Phim</a>
@@ -39,7 +39,7 @@
                     </li>
                 </ul>
                 <div class="nav-buttons">
-                    <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Đăng nhập</a>
+                    <a href="{{ route('customers.login') }}" class="btn btn-outline-light me-2">Đăng nhập</a>
                 </div>
             </div>
         </div>

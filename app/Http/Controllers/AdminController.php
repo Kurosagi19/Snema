@@ -115,7 +115,7 @@ class AdminController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('admins')->logout();
+        session()->forget('admin_id');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
