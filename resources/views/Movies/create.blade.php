@@ -15,7 +15,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <h2>Admin Panel</h2>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
                 <button class="btn btn-primary">
                     <i class="fas fa-sign-out"></i> Đăng xuất
@@ -50,7 +50,11 @@
 
                 <tr>
                     <td>Ngày chiếu</td>
-                    <td><input type="date" name="release_date" class="form-control"></td>
+                    <td>
+                        <label>
+                            <input type="date" name="release_date" class="form-control" min="{{ \Carbon\Carbon::now()->toDateString() }}">
+                        </label>
+                    </td>
                 </tr>
 
                 <tr>

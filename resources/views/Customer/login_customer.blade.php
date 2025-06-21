@@ -6,9 +6,9 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,600' rel='stylesheet' type='text/css'>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.3/paper-full.min.js"></script>
-    <title>Modern Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+    <title>Đăng nhập</title>
     <style>
-        @charset "UTF-8";
         body {
             margin: 0;
             height: 100%;
@@ -345,12 +345,15 @@
                         <input id="password-login" type="password" name="password">
                     </div>
                     <div class="form-element form-submit">
-                        <button id="logIn" class="login" type="submit" name="login">Đăng nhập</button>
+                        <button id="login" class="login" type="submit" name="login">Đăng nhập</button>
                     </div>
 
                 </form>
                 <div class="form-element">
                     <button id="goRight" class="login off" name="signup">Đăng ký</button>
+                </div>
+                <div class="form-element">
+                    <a href="{{ route('customers.index') }}" class="btn btn-primary">Xem trang mà không cần đăng nhập</a>
                 </div>
             </div>
         </div>

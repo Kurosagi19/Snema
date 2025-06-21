@@ -72,7 +72,7 @@ class MovieController extends Controller
     public function details($id)
     {
         $cinemas = Cinema::all();
-        $showtimes = Showtime::all();
+        $showtimes = Showtime::where('movie_id', $id)->get();
         $movies = Movie::with('genre_movie.genre')->findOrFail($id);
         return view('movies.movie_details', compact('movies', 'cinemas', 'showtimes'));
     }
@@ -94,7 +94,7 @@ class MovieController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'release_date' => 'required|date',
+            'release_date' => 'required|date|after_or_equal:today',
             'poster' => 'nullable|image|mimes:jpg,jpeg,png',
             'author' => 'nullable|string',
             'duration' => 'nullable|integer',

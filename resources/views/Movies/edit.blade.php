@@ -15,7 +15,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <h2>Admin Panel</h2>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
                 <button class="btn btn-primary">
                     <i class="fas fa-sign-out"></i> Đăng xuất
@@ -47,7 +47,7 @@
                 {{-- Ngày chiếu --}}
                 <div class="mb-3">
                     <label class="form-label">Ngày phát hành</label>
-                    <input type="date" name="release_date" class="form-control" value="{{ old('release_date', $movie->release_date) }}" required>
+                    <input type="date" name="release_date" class="form-control" value="{{ old('release_date', $movie->release_date) }}" min="{{ \Carbon\Carbon::now()->toDateString() }}" required>
                 </div>
 
                 {{-- Poster --}}

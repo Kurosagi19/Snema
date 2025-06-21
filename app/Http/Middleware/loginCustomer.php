@@ -17,7 +17,8 @@ class loginCustomer
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::guard('customers')->check()) {
+        if (!session()->has('customer_id')) {
+            session(['url.intended' => url()->full()]);
             return redirect()->route('customers.login');
         }
 

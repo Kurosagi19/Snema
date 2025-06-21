@@ -15,7 +15,7 @@
 <body>
     <header class="navbar">
         <div class="container">
-            <a href="index.blade.php" class="logo">Snema</a>
+            <a href="#" class="logo">Snema</a>
             <nav>
                 <a href="{{ route('customers.index') }}" class="active">Trang chủ</a>
                 <a href="">Diễn đàn</a>
@@ -25,8 +25,20 @@
                 <a href="">Về chúng tôi</a>
                 <a href="">Liên hệ</a>
             </nav>
-            <div class="auth-buttons">
-                <a href="{{ route('customers.login') }}" class="login-btn">Đăng nhập</a>
+
+            <div class="nav-buttons">
+                @if(session()->has('customer_id'))
+                    <form method="POST" action="{{ route('customers.logout') }}">
+                        @csrf
+                        <button class="btn btn-primary">
+                            <i class="fas fa-sign-out"></i> Đăng xuất
+                        </button>
+                    </form>
+                @else
+                    <div class="auth-buttons">
+                        <a href="{{ route('customers.login') }}" class="login-btn">Đăng nhập</a>
+                    </div>
+                @endif
             </div>
         </div>
     </header>

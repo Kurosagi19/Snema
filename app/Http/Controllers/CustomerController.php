@@ -111,7 +111,7 @@ class CustomerController extends Controller
         // ✅ Đăng nhập thủ công bằng session
         session(['customer_id' => $customer->id]);
 
-        return redirect()->route('customers.index');
+        return redirect()->intended(route('customers.index'));
     }
 
     public function logout(Request $request)

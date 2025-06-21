@@ -1,3 +1,5 @@
+@include('Customer.navbar')
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -13,37 +15,6 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('customers.index') }}">Snema</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('customers.index') }}">Trang chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Phim</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Rạp chiếu</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Khuyến mãi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Liên hệ</a>
-                    </li>
-                </ul>
-                <div class="nav-buttons">
-                    <a href="{{ route('customers.login') }}" class="btn btn-outline-light me-2">Đăng nhập</a>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <!-- Chi tiết phim -->
     <section class="movie-detail">
@@ -92,22 +63,53 @@
 
         <h4 class="mt-4">Suất chiếu</h4>
 
-        <form action="{{ route('bookings.create') }}" method="GET">
+        <form method="GET" action="{{ route('bookings.create') }}">
             @csrf
 
             <label for="showtime_id">Chọn suất chiếu:</label>
-            <select name="showtime_id" id="showtime_id" class="form-select" required>
-                <option value="">-- Chọn suất chiếu --</option>
-                @foreach ($movies->showtimes as $showtime)
-                    <option value="{{ $showtime->id }}">
-                        {{ \Carbon\Carbon::parse($showtime->date)->format('d/m/Y') }} –
-                        {{ \Carbon\Carbon::parse($showtime->start_time)->format('H:i') }}
-                    </option>
-                @endforeach
-            </select>
 
-            <input type="hidden" name="movie_id" value="{{ $movies->id }}">
-            <button type="submit" class="btn btn-primary mt-2">Đặt vé</button>
+            @php
+                use Carbon\Carbon;
+
+                $now = Carbon::now();
+            @endphp
+
+            @foreach ($showtimes as $showtime)
+                @php
+                    $release_date = Carbon::parse($movies->release_date);
+                    $start_time   = Carbon::parse($showtime->start_time);
+                    $can_book = true;
+
+//                    if ($release_date->isFuture()) {
+//                        $can_book = true;
+//                    }
+
+                    // Cấm nếu hôm nay và đã quá giờ chiếu
+                    if ($release_date->isToday() && $start_time->lessThan($now)) {
+                        $can_book = false;
+                    }
+
+                    // Cấm nếu release_date đã là quá khứ
+                    if ($release_date->isPast() && !$release_date->isToday()) {
+                        $can_book = false;
+                    }
+                @endphp
+
+                <div class="mb-3 border p-2 rounded">
+                    <p id="{{ $showtime->id }}"><strong>Suất chiếu:</strong>
+                        {{ $start_time->format('H:i') }} - {{ \Carbon\Carbon::parse($showtime->end_time)->format('H:i') }}
+                    </p>
+
+                    @if ($can_book)
+                        <a href="{{ route('bookings.create', ['movie_id' => $movies->id, 'showtime_id' => $showtime->id]) }}"
+                           class="btn btn-success">
+                            Đặt vé
+                        </a>
+                    @else
+                        <span class="text-muted">Không thể đặt vé (quá giờ hoặc đã chiếu)</span>
+                    @endif
+                </div>
+            @endforeach
         </form>
     </section>
 

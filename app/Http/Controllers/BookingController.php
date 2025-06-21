@@ -16,6 +16,7 @@ use App\Models\Snack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -32,7 +33,10 @@ class BookingController extends Controller
      */
     public function create(Request $request)
     {
-        $payment_options = PaymentOption::all();
+        $payment_options = [
+            1 => 'Thanh toán Online',
+            2 => 'Thanh toán khi nhận vé tại quầy',
+        ];
         $promotions = Promotion::all();
         $snacks = Snack::all();
         $showtime = Showtime::with('room')->findOrFail($request->showtime_id);
@@ -42,9 +46,11 @@ class BookingController extends Controller
         $seats = Seat::where('room_id', $showtime->room_id)->get();
 
         // Lấy danh sách seat_id đã được đặt trong booking_details
-        $booked_seat_ids = BookingDetail::whereHas('booking', function ($query) use ($showtime) {
-            $query->where('showtime_id', $showtime->id);
-        })->pluck('seat_id')->toArray();
+        $booked_seat_ids = DB::table('booking_details')
+            ->join('bookings', 'booking_details.booking_id', '=', 'bookings.id')
+            ->where('bookings.showtime_id', $showtime->id)
+            ->pluck('seat_id')
+            ->toArray();
 
         return view('Customer.booking', compact('movie', 'showtime', 'seats', 'booked_seat_ids', 'payment_options', 'promotions', 'snacks'));
     }
@@ -67,7 +73,7 @@ class BookingController extends Controller
             'promotion_id' => 'nullable|exists:promotions,id',
         ]);
 
-//        $user_id = Auth::id();
+        $user_id = Auth::id();
         $total_price = 0;
         $discount_price = 0;
 
@@ -98,8 +104,8 @@ class BookingController extends Controller
             'showtime_id'     => $request->showtime_id,
             'movie_id'        => $request->movie_id,
             'room_id'         => $request->room_id,
-//            'customer_id'     => $user_id,
-            'customer_id' => $request->customer_id,
+            'customer_id'     => $user_id,
+//            'customer_id' => $request->customer_id,
             'admin_id' => $request->admin_id,
             'payment_id'      => $request->payment_id,
             'promotion_id'    => $promotion_id,
@@ -119,7 +125,7 @@ class BookingController extends Controller
             ]);
         }
 
-        return redirect()->route('customer.index')->with('success', 'Đặt vé thành công!');
+        return redirect()->route('customers.index')->with('success', 'Đặt vé thành công!');
     }
 
     /**
