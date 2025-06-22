@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snema - Về chúng tôi</title>
+    <title>Về chúng tôi - Snema</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background: #f6f7fb;
@@ -150,24 +152,7 @@
     </style>
 </head>
 <body>
-    <header class="navbar">
-        <div class="container">
-            <a href="index.blade.php" class="logo">Snema</a>
-            <nav>
-                <a href="index.blade.php">Trang chủ</a>
-                <a href="forum.blade.php">Diễn đàn</a>
-                <a href="movies.blade.php">Phim</a>
-                <a href="cinemas.blade.php">Rạp</a>
-                <a href="food.blade.php">Đồ ăn</a>
-                <a href="about.blade.php" class="active">Về chúng tôi</a>
-                <a href="contact.blade.php">Liên hệ</a>
-            </nav>
-            <div class="auth-buttons">
-                <a href="login.blade.php" class="login-btn">Đăng nhập</a>
-                <a href="register.blade.php" class="register-btn">Đăng ký</a>
-            </div>
-        </div>
-    </header>
+    <?php include 'navbar.blade.php'; ?>
     <div class="main-content">
         <div class="ad-sidebar">
             <!-- Quảng cáo bên trái -->
