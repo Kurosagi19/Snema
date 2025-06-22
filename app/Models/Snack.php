@@ -9,4 +9,13 @@ class Snack extends Model
 {
     /** @use HasFactory<\Database\Factories\SnackFactory> */
     use HasFactory;
+
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_snacks')
+            ->withPivot('quantity');
+    }
+
 }
+
+

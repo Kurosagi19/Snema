@@ -9,6 +9,7 @@
     <title>Đặt vé - Snema</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <style rel="booking">
         /* Reset & Base Styles */
         * {
@@ -368,6 +369,12 @@
             color: #fff;
             cursor: not-allowed;
         }
+
+        .seat.selected {
+            background-color: #00FF00 !important;
+            border-color: #f5c518;
+            color: #000;
+        }
     </style>
 </head>
 
@@ -409,10 +416,7 @@
                 $seats_by_row = $seats->groupBy(fn($seat) => substr($seat->seat_code, 0, 1));
             @endphp
 
-            <div class="screen" style="background-color:black; color: white">Màn hình</div>
-
-            <!-- Seat Map -->
-            <div class="seat-map d-flex flex-column gap-2 align-items-cente" id="seatMap">
+            <div class="seat-map d-flex flex-column gap-2 align-items-center" id="seatMap">
                 @foreach ($seats_by_row as $row => $row_seats)
                     <div class="d-flex gap-2 justify-content-center align-items-center">
                         <span class="fw-bold me-2">{{ $row }}</span>
@@ -424,7 +428,7 @@
                             @endphp
 
                             <label class="seat btn {{ $seat_type === 'vip' ? 'btn-warning' : 'btn-outline-secondary' }} {{ $is_booked ? 'disabled' : '' }}">
-                                @if(!$is_booked)
+                                @if (!$is_booked)
                                     <input type="checkbox" name="seat_ids[]" value="{{ $seat->id }}" class="d-none seat-checkbox">
                                 @endif
                                 {{ substr($seat->seat_code, 1) }}
@@ -453,18 +457,24 @@
             </div>
             <!-- End Snack Selection -->
 
+            @if (isset($discount_percent) && $discount_percent > 0)
+                <div class="alert alert-success mt-2">
+                    🎉 Ưu đãi {{ $discount_percent }}% cho khách hàng đặt vé cuối tuần!
+                </div>
+                <input type="hidden" name="promotion_id" value="{{ $promotions->id }}">
+            @endif
+
             <div class="form-group mt-3">
                 <label for="payment_option">Phương thức thanh toán:</label>
-                <select name="payment_option_id" id="payment_option" class="form-control" required>
+                <select name="payment_id" id="payment_option" class="form-control" required>
                     <option value="">-- Chọn phương thức --</option>
                     @foreach ($payment_options as $id => $label)
                         <option value="{{ $id }}">{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="mt-3">
-                <button type="submit" class="btn btn-success px-4 py-2">Xác nhận đặt vé</button>
-            </div>
+
+                <button type="submit" class="btn btn-success px-4 py-2 mt-3">Xác nhận đặt vé</button>
 
         </div>
 
@@ -492,6 +502,20 @@
         </div>
     </footer>
     <script src="{{ asset('js/snacks.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.seat-checkbox').forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    const label = this.closest('label');
+                    if (this.checked) {
+                        label.classList.add('selected');
+                    } else {
+                        label.classList.remove('selected');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

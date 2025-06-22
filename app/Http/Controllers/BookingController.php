@@ -33,26 +33,44 @@ class BookingController extends Controller
      */
     public function create(Request $request)
     {
+        $today = Carbon::now();
+        $is_weekend = $today->isSaturday() || $today->isSunday();
+
+        $promotion = Promotion::where('id', 1)->first(); // hoặc where('id', 1)->first()
+        if ($is_weekend && $promotion) {
+            $promotions = $promotion;
+            $discount_percent = $promotion->promotion_type; // ví dụ: 25 hoặc 50
+        }
+
         $payment_options = [
             1 => 'Thanh toán Online',
             2 => 'Thanh toán khi nhận vé tại quầy',
         ];
-        $promotions = Promotion::all();
-        $snacks = Snack::all();
+
         $showtime = Showtime::with('room')->findOrFail($request->showtime_id);
         $movie = Movie::findOrFail($request->movie_id);
-
-        // Lấy tất cả ghế của phòng chiếu trong suất chiếu đó
         $seats = Seat::where('room_id', $showtime->room_id)->get();
 
-        // Lấy danh sách seat_id đã được đặt trong booking_details
+        // Load danh sách snack từ bảng `snacks` (không phải booking_snacks)
+        $snacks = \App\Models\Snack::all();
+
+        // Danh sách ghế đã được đặt
         $booked_seat_ids = DB::table('booking_details')
             ->join('bookings', 'booking_details.booking_id', '=', 'bookings.id')
             ->where('bookings.showtime_id', $showtime->id)
             ->pluck('seat_id')
             ->toArray();
 
-        return view('Customer.booking', compact('movie', 'showtime', 'seats', 'booked_seat_ids', 'payment_options', 'promotions', 'snacks'));
+        return view('Customer.booking', compact(
+            'movie',
+            'showtime',
+            'seats',
+            'booked_seat_ids',
+            'payment_options',
+            'promotions',
+            'discount_percent',
+            'snacks' // truyền vào view
+        ));
     }
 
     /**
@@ -73,7 +91,11 @@ class BookingController extends Controller
             'promotion_id' => 'nullable|exists:promotions,id',
         ]);
 
-        $user_id = Auth::id();
+        $customer_id = session('customer_id');
+        if (!$customer_id) {
+            return redirect()->route('customer.login')->with('error', 'Vui lòng đăng nhập để đặt vé.');
+        }
+
         $total_price = 0;
         $discount_price = 0;
 
@@ -86,14 +108,14 @@ class BookingController extends Controller
             $total_price += $seat_price;
         }
 
-        // 2. Tính giảm giá nếu có
+//         2. Tính giảm giá nếu có
         if ($request->promotion_id) {
             $promotion = Promotion::find($request->promotion_id);
             $promotion_id = $promotion ? (int) $promotion->id : null;
-            if ($promotion && $promotion->promotion_type == 1) {
-                $discount_price = $total_price * (25 / 100);
-                } elseif ($promotion && $promotion->promotion_type == 2) {
-                    $discount_price = $total_price * (50 / 100);
+            if ($promotion && $promotion->promotion_type == 15) {
+                $discount_price = $total_price * (15 / 100);
+                } elseif ($promotion && $promotion->promotion_type == 20) {
+                    $discount_price = $total_price * (20 / 100);
             }
         }
 
@@ -104,11 +126,10 @@ class BookingController extends Controller
             'showtime_id'     => $request->showtime_id,
             'movie_id'        => $request->movie_id,
             'room_id'         => $request->room_id,
-            'customer_id'     => $user_id,
-//            'customer_id' => $request->customer_id,
+            'customer_id'     => $customer_id,
             'admin_id' => $request->admin_id,
             'payment_id'      => $request->payment_id,
-            'promotion_id'    => $promotion_id,
+            'promotion_id'    => $request->promotion_id,
             'total_price'    => $total_price,
             'discount_price' => $discount_price,
             'final_price'    => $final_price,
