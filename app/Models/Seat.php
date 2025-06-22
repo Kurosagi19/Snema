@@ -11,4 +11,8 @@ class Seat extends Model
     use HasFactory;
     public $timestamps = false;
     protected $fillable = ['id', 'seat_type', 'seat_code'];
+
+    public function seats() {
+        return $this->hasMany(BookingDetail::class);
+    }
 }

@@ -33,6 +33,22 @@ class AdminController extends Controller
         return view('Admin.movies', compact('movies'));
     }
 
+    public function bookings()
+    {
+        $bookings = Booking::with([
+            'customers:id, name, email, phone_number',
+            'admins:id, name, email',
+            'showtimes.movie:id, title, duration',
+            'showtimes.room.cinema:id, name',
+            'payment_option:id, option',
+            'promotions:id, promotion_type',
+            'booking_snacks.snack:id, name, price',
+            'booking_details.seats:id, seat_code, seat_type',
+        ])->get();
+
+        return view('Admin.orders', compact('bookings'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */

@@ -46,6 +46,7 @@ Route::middleware(\App\Http\Middleware\loginAdmin::class)->prefix('/admin')->gro
     Route::put('/genres/{id}', [GenreController::class, 'update'])->name('genres.update');
     Route::get('/snacks', [\App\Http\Controllers\SnackController::class, 'index'])->name('snacks.index');
     Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::get('/bookings', [\App\Http\Controllers\BookingController::class, 'index'])->name('admin.bookings');
     Route::post('/logout', [\App\Http\Controllers\AdminController::class, 'logout'])->name('admin.logout');
 });
 

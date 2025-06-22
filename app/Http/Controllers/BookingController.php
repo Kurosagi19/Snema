@@ -25,7 +25,22 @@ class BookingController extends Controller
      */
     public function index()
     {
-        //
+        $bookings = Booking::with([
+            'customers:id,name,email,phone_number',
+            'admins:id,name,email',
+            'showtime.movie:id,title,duration',
+            'showtime.room.cinema:id,name',
+            'payment_options:id,option',
+            'promotion:id,promotion_type',
+            'booking_snacks.snack:id,name,price',
+            'booking_details.seat:id,seat_code,seat_type' // Đổi từ seats thành seat
+        ])
+            ->whereHas('customers')
+            ->whereHas('showtime.movie')
+            ->whereHas('booking_details.seat') // Đổi từ seats thành seat
+            ->get();
+
+        return view('Admin.orders', compact('bookings'));
     }
 
     /**
@@ -52,7 +67,7 @@ class BookingController extends Controller
         $seats = Seat::where('room_id', $showtime->room_id)->get();
 
         // Load danh sách snack từ bảng `snacks` (không phải booking_snacks)
-        $snacks = \App\Models\Snack::all();
+        $snacks = Snack::all();
 
         // Danh sách ghế đã được đặt
         $booked_seat_ids = DB::table('booking_details')
@@ -78,9 +93,6 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request)
     {
-        // Mở dòng dưới để test xem đã lấy được dữ liệu chưa
-//        dd($request->all());
-
         $request->validate([
             'seat_ids' => 'required|array|min:1',
             'seat_ids.*' => 'exists:seats,id',
@@ -89,6 +101,7 @@ class BookingController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'payment_id' => 'required|exists:payment_options,id',
             'promotion_id' => 'nullable|exists:promotions,id',
+            'snack_qty' => 'nullable|array',
         ]);
 
         $customer_id = session('customer_id');
@@ -96,10 +109,8 @@ class BookingController extends Controller
             return redirect()->route('customer.login')->with('error', 'Vui lòng đăng nhập để đặt vé.');
         }
 
+        // 1. Tính tổng tiền ghế
         $total_price = 0;
-        $discount_price = 0;
-
-        // 1. Tính tổng tiền
         foreach ($request->seat_ids as $seat_id) {
             $seat = Seat::find($seat_id);
             if (!$seat) continue;
@@ -108,39 +119,80 @@ class BookingController extends Controller
             $total_price += $seat_price;
         }
 
-//         2. Tính giảm giá nếu có
-        if ($request->promotion_id) {
-            $promotion = Promotion::find($request->promotion_id);
-            $promotion_id = $promotion ? (int) $promotion->id : null;
-            if ($promotion && $promotion->promotion_type == 15) {
-                $discount_price = $total_price * (15 / 100);
-                } elseif ($promotion && $promotion->promotion_type == 20) {
-                    $discount_price = $total_price * (20 / 100);
+        // 2. Xử lý đồ ăn
+        $snack_total = 0;
+        $snack_items = [];
+        $booking_snacks_id = null;
+
+        if ($request->snack_qty) {
+            foreach ($request->snack_qty as $snack_id => $quantity) {
+                $quantity = (int)$quantity;
+                if ($quantity > 0) {
+                    $snack = Snack::find($snack_id);
+                    if ($snack) {
+                        $item_total = $snack->price * $quantity;
+                        $snack_total += $item_total;
+                        $snack_items[] = [
+                            'snack_id' => $snack_id,
+                            'quantity' => $quantity,
+                            'price' => $snack->price,
+                            'total_price' => $item_total
+                        ];
+                    }
+                }
+            }
+
+            // 3. Tạo booking_snacks nếu có đồ ăn
+            if (!empty($snack_items)) {
+                $booking_snack = BookingSnack::create([
+                    'snack_id' => $snack_items[0]['snack_id'], // Lưu snack đầu tiên
+                    'quantity' => $snack_items[0]['quantity'],
+                    'price' => $snack_items[0]['price'],
+                    'total_price' => $snack_total
+                ]);
+                $booking_snacks_id = $booking_snack->id;
+
+                // Lưu các snack còn lại vào JSON (nếu có nhiều hơn 1 snack)
+                if (count($snack_items) > 1) {
+                    $additional_snacks = array_slice($snack_items, 1);
+                    $booking_snack->additional_snacks = json_encode($additional_snacks);
+                    $booking_snack->save();
+                }
             }
         }
 
-        $final_price = $total_price - $discount_price;
+        // 4. Tính giảm giá nếu có
+        $discount_price = 0;
+        if ($request->promotion_id) {
+            $promotion = Promotion::find($request->promotion_id);
+            if ($promotion) {
+                $discount_price = ($total_price + $snack_total) * ($promotion->promotion_type / 100);
+            }
+        }
 
-        // 3. Tạo booking
+        $final_price = ($total_price + $snack_total) - $discount_price;
+
+        // 5. Tạo booking
         $booking = Booking::create([
-            'showtime_id'     => $request->showtime_id,
-            'movie_id'        => $request->movie_id,
-            'room_id'         => $request->room_id,
-            'customer_id'     => $customer_id,
+            'showtime_id' => $request->showtime_id,
+            'movie_id' => $request->movie_id,
+            'room_id' => $request->room_id,
+            'customer_id' => $customer_id,
             'admin_id' => $request->admin_id,
-            'payment_id'      => $request->payment_id,
-            'promotion_id'    => $request->promotion_id,
-            'total_price'    => $total_price,
+            'payment_id' => $request->payment_id,
+            'promotion_id' => $request->promotion_id,
+            'booking_snacks_id' => $booking_snacks_id,
+            'total_price' => $total_price + $snack_total,
             'discount_price' => $discount_price,
-            'final_price'    => $final_price,
-            'status'          => '1',
+            'final_price' => $final_price,
+            'status' => '1',
         ]);
 
-        // 4. Tạo từng dòng booking_detail cho mỗi ghế
+        // 6. Tạo booking_details cho mỗi ghế
         foreach ($request->seat_ids as $seat_id) {
             BookingDetail::create([
-                'booking_id'   => $booking->id,
-                'seat_id'      => $seat_id,
+                'booking_id' => $booking->id,
+                'seat_id' => $seat_id,
                 'booking_time' => Carbon::now(),
                 'price' => $final_price,
             ]);

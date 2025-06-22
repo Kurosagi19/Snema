@@ -597,7 +597,26 @@
             <!-- Upcoming Movies -->
             <section class="mb-5">
                 <h2 class="section-title">Phim sắp chiếu</h2>
-
+                <div class="movie-grid">
+                    {{-- @foreach() --}}
+                    @foreach($movies as $movie)
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <img src="{{ asset('storage/' . $movie->poster) }}" alt="{{ $movie->title }}">
+                            </div>
+                            <div class="movie-info">
+                                <h3 class="movie-title">{{ $movie->title }}</h3>
+                                <div class="movie-meta">
+                                    <span>{{ $movie->duration }} phút</span>
+                                    <span class="movie-rating">
+                                        <i class="fas fa-star"></i> {{ $movie->rating }}
+                                    </span>
+                                </div>
+                                <button type="button" class="btn btn-primary"><a href="{{ route('movies.details', $movie->id) }}" style="color: white">Chi tiết</a></button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
                 <div class="movie-grid">
 
                 </div>
@@ -610,7 +629,7 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <div class="promo-card">
-                            <img src="https://via.placeholder.com/400x200" alt="Promo 1">
+                            <img src="{{ asset('storage/images.jfif') }}" alt="Promo 1">
                             <div class="promo-content">
                                 <h3 class="promo-title">Giảm 15% thứ 7, 20% chủ nhật hàng tuần</h3>
                                 <p class="promo-desc">Áp dụng cho tất cả các suất chiếu thứ 7 và chủ nhật</p>

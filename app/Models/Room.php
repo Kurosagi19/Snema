@@ -9,4 +9,8 @@ class Room extends Model
 {
     /** @use HasFactory<\Database\Factories\RoomFactory> */
     use HasFactory;
+
+    public function cinema() {
+        return $this->belongsTo(Cinema::class);
+    }
 }

@@ -403,7 +403,7 @@
             <img src="{{ asset('storage/' . $movie->poster) }}" class="img-fluid rounded mb-3" alt="Poster">
 
             <p><strong>Suất chiếu:</strong> lúc {{ \Carbon\Carbon::parse($showtime->start_time)->format('H:i:s') }}</p>
-            <p><strong>Ngày chiếu:</strong> {{ \Carbon\Carbon::parse($showtime->date)->format('d/m/Y') }}</p>
+            <p><strong>Ngày chiếu:</strong> {{ \Carbon\Carbon::parse($movie->release_date)->format('d/m/Y') }}</p>
         </div>
 
         {{-- Cột phải: Chọn ghế, đồ ăn, phương thức thanh toán --}}
@@ -444,9 +444,9 @@
                     <div class="snack-item mb-2" data-price="{{ $snack->price }}" data-id="{{ $snack->id }}">
                         <strong>{{ $snack->name }}</strong> - Giá: <span class="price">{{ number_format($snack->price) }}</span>đ
                         <div class="input-group mt-1" style="max-width: 200px;">
-                            <button class="btn btn-sm btn-outline-secondary decrease">-</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary decrease">-</button>
                             <input type="text" name="snack_qty[{{ $snack->id }}]" class="form-control text-center quantity" value="0" readonly>
-                            <button class="btn btn-sm btn-outline-secondary increase">+</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary increase">+</button>
                         </div>
                     </div>
                 @endforeach

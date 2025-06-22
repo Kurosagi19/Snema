@@ -25,7 +25,7 @@ class SeatSeeder extends Seeder
                     'seat_code' => $row . $i, // Ví dụ: A1, A2...
                     'seat_number' => $seatNumber,
                     'seat_status' => '1',
-                    'room_id' => '1',
+                    'room_id' => '2',
                 ]);
                 $seatNumber++;
             }
