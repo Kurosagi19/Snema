@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Cinema;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
@@ -21,15 +22,23 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $movies = DB::table('movies')
-            ->join('genre_movies', 'movies.genre_movie_id', '=', 'genre_movies.id')
-            ->join('genres', 'genre_movies.genre_id', '=', 'genres.id')
-            ->select('movies.*', 'genres.genre_name as genre_name', 'genres.id as genre_id')
-            ->get();
+        $query = $request->input('q');
+
+        if ($query) {
+            $movies = Movie::where('title', 'LIKE', '%' . $query . '%')->get();
+        } else {
+            $movies = DB::table('movies')
+                ->join('genre_movies', 'movies.genre_movie_id', '=', 'genre_movies.id')
+                ->join('genres', 'genre_movies.genre_id', '=', 'genres.id')
+                ->select('movies.*', 'genres.genre_name as genre_name', 'genres.id as genre_id')
+                ->get();
+        }
+
+        $cinemas = Cinema::all();
         $genres = Genre::all();
-        return view('Customer.index', compact('movies', 'genres'));
+        return view('Customer.index', compact('movies', 'genres', 'cinemas', 'query'));
     }
 
     /**

@@ -663,7 +663,7 @@
         <div class="container">
             <h2 class="showtimes-title">Trailer</h2>
             <div class="trailer-container">
-                <iframe src="https://www.youtube.com/embed/V6MqOi53zGs?si=hUN6qQwKGBlEVhdc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="{{ $movies->trailer }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </section>
