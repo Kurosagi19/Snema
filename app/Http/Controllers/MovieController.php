@@ -61,6 +61,7 @@ class MovieController extends Controller
         $array = Arr::add($array, 'description', $request->description);
         $array = Arr::add($array, 'comment', $request->comment);
         $array = Arr::add($array, 'rating', $request->rating);
+        $array = Arr::add($array, 'trailer', $request->trailer);
         $array = Arr::add($array, 'genre_movie_id', $request->genre_movie_id);
         Movie::create($array);
         return Redirect::route('admin.movies');

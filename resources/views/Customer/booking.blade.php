@@ -376,6 +376,33 @@
             color: #000;
         }
     </style>
+    <style rel="screen">
+        .cinema-screen {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .screen-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .screen-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .screen-bar {
+            width: 80%;
+            height: 20px;
+            margin: 0 auto;
+            background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+            border-radius: 50%/10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
 
 <body>
@@ -411,6 +438,12 @@
             @csrf
 
         <div class="seat-selection">
+            <div class="cinema-seat-layout">
+                <!-- Thêm màn hình phía trên -->
+                <div class="cinema-screen text-center mb-4">
+                    <div class="screen-label">MÀN HÌNH</div>
+                    <div class="screen-bar"></div>
+                </div>
 
             @php
                 $seats_by_row = $seats->groupBy(fn($seat) => substr($seat->seat_code, 0, 1));
@@ -436,6 +469,11 @@
                         @endforeach
                     </div>
                 @endforeach
+            </div>
+
+            <div>
+                <p>Giá vé ghế thường: 45.000đ</p>
+                <p>Giá vé ghế vip: 50.000đ</p>
             </div>
 
 {{--            Chọn đồ ăn vặt --}}
@@ -474,7 +512,13 @@
                 </select>
             </div>
 
-                <button type="submit" class="btn btn-success px-4 py-2 mt-3">Xác nhận đặt vé</button>
+            <div id="qr-code-container" class="mt-3" style="display: none;">
+                <label><strong>Quét mã QR để thanh toán:</strong></label>
+                <img src="{{ asset('storage/qr.png') }}" alt="QR Code" class="img-fluid" style="max-width: 200px;">
+            </div>
+
+
+            <button type="submit" class="btn btn-success px-4 py-2 mt-3">Xác nhận đặt vé</button>
 
         </div>
 
@@ -516,6 +560,22 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const paymentSelect = document.getElementById('payment_option');
+            const qrContainer = document.getElementById('qr-code-container');
+
+            paymentSelect.addEventListener('change', function () {
+                if (this.value === '1') {
+                    qrContainer.style.display = 'block';
+                } else {
+                    qrContainer.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

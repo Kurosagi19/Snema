@@ -37,12 +37,12 @@
             </form>
         </div>
 
-        <div class="page-header">
-            <h1 class="page-title">Quản lý admin</h1>
-            <button class="btn btn-primary" onclick="openModalWithData('admin')">
-                <i class="fas fa-plus"></i> <a href="{{ route('admin.create') }}" style="color: white">Thêm admin</a>
-            </button>
-        </div>
+{{--        <div class="page-header">--}}
+{{--            <h1 class="page-title">Quản lý admin</h1>--}}
+{{--            <button class="btn btn-primary" onclick="openModalWithData('admin')">--}}
+{{--                <i class="fas fa-plus"></i> <a href="{{ route('admin.create') }}" style="color: white">Thêm admin</a>--}}
+{{--            </button>--}}
+{{--        </div>--}}
 
         <div class="table-container">
             <table class="table">
