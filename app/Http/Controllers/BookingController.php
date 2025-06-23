@@ -82,8 +82,7 @@ class BookingController extends Controller
             'seats',
             'booked_seat_ids',
             'payment_options',
-            'promotions',
-            'discount_percent',
+            'promotion',
             'snacks' // truyền vào view
         ));
     }

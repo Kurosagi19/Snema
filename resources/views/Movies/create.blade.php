@@ -98,7 +98,12 @@
                 </tr>
 
                 <tr>
-                    <td>Thể loại phim (genre_movie_id)</td>
+                    <td>Trailer (link embed youtube)</td>
+                    <td><input type="text" name="trailer" class="form-control"></td>
+                </tr>
+
+                <tr>
+                    <td>Thể loại phim</td>
                     <td>
                         <select name="genre_movie_id" class="form-control" required>
                             <option value="">-- Chọn thể loại --</option>

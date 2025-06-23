@@ -24,21 +24,34 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $query = $request->input('q');
+        $cinemas = Cinema::all();
 
-        if ($query) {
-            $movies = Movie::where('title', 'LIKE', '%' . $query . '%')->get();
-        } else {
-            $movies = DB::table('movies')
-                ->join('genre_movies', 'movies.genre_movie_id', '=', 'genre_movies.id')
-                ->join('genres', 'genre_movies.genre_id', '=', 'genres.id')
-                ->select('movies.*', 'genres.genre_name as genre_name', 'genres.id as genre_id')
-                ->get();
+        $query = $request->input('q');
+        $genre_id = $request->input('genre_id');
+
+        $movies = Movie::query();
+
+        if ($cinema_id = $request->input('cinema_id')) {
+            $movies->whereHas('showtime.room.cinema', function ($query) use ($cinema_id) {
+                $query->where('id', $cinema_id);
+            });
         }
 
-        $cinemas = Cinema::all();
+        if ($query) {
+            $movies->where('title', 'LIKE', '%' . $query . '%');
+        }
+
+        if ($genre_id) {
+            // Nếu movie có genre_movie_id trỏ tới bảng genre_movies
+            $movies->whereHas('genre_movie', function ($q) use ($genre_id) {
+                $q->where('genre_id', $genre_id);
+            });
+        }
+
+        $movies = $movies->get();
         $genres = Genre::all();
-        return view('Customer.index', compact('movies', 'genres', 'cinemas', 'query'));
+
+        return view('Customer.index', compact('movies', 'genres', 'query', 'genre_id', 'cinemas'));
     }
 
     /**

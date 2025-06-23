@@ -91,6 +91,11 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label">Trailer (link embed youtube)</label>
+                    <input type="text" name="trailer" class="form-control" value="{{ old('trailer', $movie->trailer) }}">
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label">Thể loại</label>
                     <select name="genre_movie_id" class="form-select" required>
                         <option value="">-- Chọn thể loại --</option>
@@ -104,7 +109,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Cập nhật</button>
-                <a href="{{ route('movies.index') }}" class="btn btn-secondary">Huỷ</a>
+                <a href="{{ route('admin.movies') }}" class="btn btn-secondary">Huỷ</a>
             </form>
         </div>
 </div>

@@ -12,7 +12,7 @@ class Movie extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'movies';
-    protected $fillable = ['title', 'release_date', 'poster', 'author', 'duration', 'language', 'caption', 'description', 'comment', 'rating', 'genre_movie_id'];
+    protected $fillable = ['title', 'release_date', 'poster', 'author', 'duration', 'language', 'caption', 'description', 'comment', 'rating', 'trailer', 'genre_movie_id'];
 
     public function destroyMovie() {
         DB::table('movies')
@@ -22,7 +22,7 @@ class Movie extends Model
 
     public function genre_movie()
     {
-        return $this->belongsTo(GenreMovie::class);
+        return $this->belongsTo(GenreMovie::class, 'genre_movie_id');
     }
 
     public function showtime()

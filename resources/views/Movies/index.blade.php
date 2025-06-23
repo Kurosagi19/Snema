@@ -16,9 +16,9 @@
 <header>
     <div class="logo">MOVIE TICKET</div>
     <nav>
-        <a href="{{ route('Customer.index') }}" class="active">Trang chủ</a>
+        <a href="{{ route('customers.index') }}" class="active">Trang chủ</a>
         <a href="#">Phim</a>
-        <a href="cinemas.html">Rạp</a>
+        <a href="#">Rạp</a>
         <a href="#">Khuyến mãi</a>
     </nav>
     <div class="auth-buttons">

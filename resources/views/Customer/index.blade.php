@@ -548,19 +548,25 @@
             <section class="mb-5">
                 <h2 class="section-title">Phim đang chiếu</h2>
 
-                <div class="cinema-selector">
+                <form method="GET" action="{{ route('customers.index') }}" class="mb-3">
                     <label for="cinemaSelect">Chọn rạp:</label>
-                    @foreach($cinemas as $cinema)
-                        <select id="cinemaSelect" class="form-select">
-                            <option value="{{ $cinema->id }}">{{ $cinema->name }}</option>
-                        </select>
-                    @endforeach
-                </div>
+                    <select name="cinema_id" id="cinemaSelect" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Tất cả rạp --</option>
+                        @foreach($cinemas as $cinema)
+                            <option value="{{ $cinema->id }}" {{ request('cinema_id') == $cinema->id ? 'selected' : '' }}>
+                                {{ $cinema->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
 
                 <div class="movie-tabs">
-                    <div class="movie-tab active" data-genre="all">Tất cả</div>
+                    <a href="{{ route('customers.index') }}" class="movie-tab {{ request('genre_id') ? '' : 'active' }}">Tất cả</a>
                     @foreach($genres as $genre)
-                        <div class="movie-tab" data-genre="all" id="{{ $genre->id }}">{{ $genre->genre_name }}</div>
+                        <a href="{{ route('customers.index', ['genre_id' => $genre->id]) }}"
+                           class="movie-tab {{ request('genre_id') == $genre->id ? 'active' : '' }}">
+                            {{ $genre->genre_name }}
+                        </a>
                     @endforeach
                 </div>
 
