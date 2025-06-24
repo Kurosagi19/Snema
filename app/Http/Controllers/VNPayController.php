@@ -16,10 +16,10 @@ class VNPayController extends Controller
 {
     public function createPayment(Request $request)
     {
-        $amount = (int) $request->input('amount');
-        if ($amount <= 0) {
-            return redirect()->back()->with('error', 'Tổng tiền không hợp lệ.');
-        }
+//        $amount = (int) $request->input('amount');
+//        if ($amount <= 0) {
+//            return redirect()->back()->with('error', 'Tổng tiền không hợp lệ.');
+//        }
 
         session([
             'booking_data' => [
@@ -31,18 +31,19 @@ class VNPayController extends Controller
                 'promotion_id' => $request->promotion_id,
                 'seat_ids' => $request->seat_ids ?? [],
                 'snack_qty' => $request->snack_qty ?? [],
-                'final_price' => $amount
+                'final_price' => $request->amount,
+                'admin_id' =>$request->admin_id,
             ]
         ]);
 
         // Thiết lập thông tin thanh toán VNPAY
-        $vnp_TmnCode = env('VNPAY_TMN_CODE');
-        $vnp_HashSecret = env('VNPAY_HASH_SECRET');
-        $vnp_Url = env('VNPAY_URL');
-        $vnp_Returnurl = route('vnpay.return');
+        $vnp_TmnCode = 'TL5UPZY3';
+        $vnp_HashSecret = 'FNMD0HT4O4NQI00TSNQDK9DRRK2GKKQ2';
+        $vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+        $vnp_Returnurl = 'http://localhost/Snema/public/vnpay-return';
 
         $order_id = uniqid();
-        $vnp_Amount = $amount * 100;
+        $vnp_Amount = $request->amount * 100;
         $vnp_TxnRef = $order_id;
         $vnp_OrderInfo = 'Thanh toán vé xem phim';
         $vnp_OrderType = 'billpayment';
@@ -65,10 +66,10 @@ class VNPayController extends Controller
         ];
 
         ksort($inputData);
-        $hashdata = urldecode(http_build_query($inputData));
+        $hashdata = http_build_query($inputData);
         $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
 
-        $query = http_build_query($inputData); // Không chứa SecureHash
+        $query = http_build_query($inputData);
         $vnp_Url = $vnp_Url . '?' . $query . '&vnp_SecureHash=' . $vnpSecureHash;
 
 //        dd([

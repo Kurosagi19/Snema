@@ -543,6 +543,7 @@
             <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
             <input type="hidden" name="admin_id" value="1">
 
+        </div>
         </form>
     </div>
 

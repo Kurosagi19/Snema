@@ -19,6 +19,9 @@ Route::middleware(\App\Http\Middleware\loginCustomer::class)->prefix('/customer'
 Route::get('/vnpay-return', [\App\Http\Controllers\VNPayController::class, 'vnpayReturn'])->name('vnpay.return');
 Route::post('/vnpay-create', [\App\Http\Controllers\VNPayController::class, 'createPayment'])->name('vnpay.create');
 
+//Route::post('/vnpay-create', [\App\Http\Controllers\PaymentController::class, 'createPayment'])->name('vnpay.create');
+//Route::get('/vnpay-return', [\App\Http\Controllers\PaymentController::class, 'handleReturn'])->name('vnpay.return');
+
 Route::prefix('/customer')->group(function() {
     Route::get('/login', [\App\Http\Controllers\CustomerController::class, 'login'])->name('customers.login');
     Route::post('/login_process', [\App\Http\Controllers\CustomerController::class, 'loginProcess'])->name('customers.loginProcess');
