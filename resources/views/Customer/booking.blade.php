@@ -406,6 +406,21 @@
 </head>
 
 <body>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
     <!-- Header -->
     <header class="booking-header">
         <a href="{{ route('movies.details', $movie->id) }}" class="back-btn">
@@ -434,7 +449,7 @@
         </div>
 
         {{-- Cột phải: Chọn ghế, đồ ăn, phương thức thanh toán --}}
-        <form method="post" action="{{ route('bookings.store') }}">
+        <form method="post" action="{{ route('vnpay.create') }}">
             @csrf
 
         <div class="seat-selection">
@@ -495,12 +510,17 @@
             </div>
             <!-- End Snack Selection -->
 
+                <div class="mt-3">
+                    <strong>Tổng cộng: <span id="final-price-display">0</span>đ</strong>
+                </div>
+
             @if (isset($discount_percent) && $discount_percent > 0)
                 <div class="alert alert-success mt-2">
                     🎉 Ưu đãi {{ $discount_percent }}% cho khách hàng đặt vé cuối tuần!
                 </div>
                 <input type="hidden" name="promotion_id" value="{{ $promotions->id }}">
             @endif
+
 
             <div class="form-group mt-3">
                 <label for="payment_option">Phương thức thanh toán:</label>
@@ -512,17 +532,12 @@
                 </select>
             </div>
 
-            <div id="qr-code-container" class="mt-3" style="display: none;">
-                <label><strong>Quét mã QR để thanh toán:</strong></label>
-                <img src="{{ asset('storage/qr.png') }}" alt="QR Code" class="img-fluid" style="max-width: 200px;">
-            </div>
-
-
             <button type="submit" class="btn btn-success px-4 py-2 mt-3">Xác nhận đặt vé</button>
 
         </div>
 
             {{-- Ẩn các thông tin cần gửi --}}
+            <input type="hidden" name="amount" id="final-amount" value="">
             <input type="hidden" name="movie_id" value="{{ $movie->id }}">
             <input type="hidden" name="room_id" value="{{ $showtime->room_id }}">
             <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
@@ -562,19 +577,45 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const paymentSelect = document.getElementById('payment_option');
-            const qrContainer = document.getElementById('qr-code-container');
+        function calculateFinalPrice() {
+            let total = 0;
 
-            paymentSelect.addEventListener('change', function () {
-                if (this.value === '1') {
-                    qrContainer.style.display = 'block';
-                } else {
-                    qrContainer.style.display = 'none';
-                }
+            // Tính tiền ghế
+            document.querySelectorAll('input[name="seat_ids[]"]:checked').forEach(seat => {
+                const seatType = seat.closest('label').classList.contains('btn-warning') ? 'vip' : 'normal';
+                total += (seatType === 'vip') ? 50000 : 45000;
             });
+
+            // Tính tiền snack
+            let snackTotal = 0;
+            document.querySelectorAll('.snack-item').forEach(snack => {
+                const qty = parseInt(snack.querySelector('.quantity').value) || 0;
+                const price = parseInt(snack.dataset.price) || 0;
+                snackTotal += qty * price;
+            });
+
+            let finalTotal = total + snackTotal;
+
+            // Áp dụng khuyến mãi nếu có
+            const discountPercent = {{ $discount_percent ?? 0 }};
+            if (discountPercent > 0) {
+                finalTotal -= finalTotal * discountPercent / 100;
+            }
+
+            // Hiển thị và gán vào form
+            document.getElementById('final-price-display').textContent = finalTotal.toLocaleString();
+            document.getElementById('final-amount').value = finalTotal;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('input[name="seat_ids[]"], .increase, .decrease').forEach(el => {
+                el.addEventListener('change', calculateFinalPrice);
+                el.addEventListener('click', calculateFinalPrice);
+            });
+            calculateFinalPrice();
         });
     </script>
+
 
 </body>
 

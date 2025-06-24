@@ -11,10 +11,13 @@ Route::get('/', function () {
 
 Route::middleware(\App\Http\Middleware\loginCustomer::class)->prefix('/customer')->group(function() {
     Route::get('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'create'])->name('bookings.create');
-    Route::post('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
+
     Route::get('/bookings/history', [\App\Http\Controllers\BookingController::class, 'history'])->name('booking.history');
     Route::post('/logout', [\App\Http\Controllers\CustomerController::class, 'logout'])->name('customers.logout');
 });
+
+Route::get('/vnpay-return', [\App\Http\Controllers\VNPayController::class, 'vnpayReturn'])->name('vnpay.return');
+Route::post('/vnpay-create', [\App\Http\Controllers\VNPayController::class, 'createPayment'])->name('vnpay.create');
 
 Route::prefix('/customer')->group(function() {
     Route::get('/login', [\App\Http\Controllers\CustomerController::class, 'login'])->name('customers.login');

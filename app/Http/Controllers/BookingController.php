@@ -58,8 +58,7 @@ class BookingController extends Controller
         }
 
         $payment_options = [
-            1 => 'Thanh toán Online',
-            2 => 'Thanh toán khi nhận vé tại quầy',
+            1 => 'Thanh toán VNPay',
         ];
 
         $showtime = Showtime::with('room')->findOrFail($request->showtime_id);
@@ -114,8 +113,7 @@ class BookingController extends Controller
             $seat = Seat::find($seat_id);
             if (!$seat) continue;
 
-            $seat_price = $seat->seat_type === 'vip' ? 50000 : 45000;
-            $total_price += $seat_price;
+            $total_price += $seat->seat_price;
         }
 
         // 2. Xử lý đồ ăn
