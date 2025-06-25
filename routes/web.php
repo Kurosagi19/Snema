@@ -11,7 +11,6 @@ Route::get('/', function () {
 
 Route::middleware(\App\Http\Middleware\loginCustomer::class)->prefix('/customer')->group(function() {
     Route::get('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'create'])->name('bookings.create');
-
     Route::get('/bookings/history', [\App\Http\Controllers\BookingController::class, 'history'])->name('bookings.history');
     Route::post('/logout', [\App\Http\Controllers\CustomerController::class, 'logout'])->name('customers.logout');
 });
@@ -54,7 +53,10 @@ Route::middleware(\App\Http\Middleware\loginAdmin::class)->prefix('/admin')->gro
     Route::get('/snacks', [\App\Http\Controllers\SnackController::class, 'index'])->name('snacks.index');
     Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'destroy'])->name('bookings.destroy');
     Route::get('/bookings', [\App\Http\Controllers\BookingController::class, 'index'])->name('admin.bookings');
-    Route::get('/rooms', [\App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+    Route::get('/rooms', [\App\Http\Controllers\RoomController::class, 'index'])->name('admin.rooms');
+    Route::get('/rooms/create', [\App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
+    Route::post('/rooms/create', [\App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
+    Route::delete('/rooms/{id}', [\App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
     Route::post('/logout', [\App\Http\Controllers\AdminController::class, 'logout'])->name('admin.logout');
 });
 

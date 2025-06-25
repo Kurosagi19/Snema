@@ -14,7 +14,7 @@ class Room extends Model
         return $this->belongsTo(Cinema::class);
     }
 
-    public function location() {
-        return $this->belongsTo(Location::class);
-    }
+//    public function location() {
+//        return $this->belongsTo(Location::class);
+//    }
 }
