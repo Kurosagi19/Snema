@@ -223,9 +223,15 @@ class BookingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Booking $booking)
+    public function show($id)
     {
-        //
+        $booking = Booking::with([
+            'showtime.movie',
+            'showtime.room.cinema',
+            'booking_details.seat',
+            'booking_details'
+            ])->findOrFail($id);
+        return view('Customer.history', compact('booking'));
     }
 
     /**

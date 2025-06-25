@@ -478,6 +478,21 @@
             }
         }
     </style>
+    <style>
+        .transparent-modal {
+            background-color: rgba(255, 255, 255, 0); /* Hoàn toàn trong suốt */
+            backdrop-filter: blur(4px);               /* Tuỳ chọn: hiệu ứng làm mờ */
+            box-shadow: none;                         /* Loại bỏ đổ bóng */
+            border: none;                             /* Loại bỏ viền */
+        }
+
+        .list-group-item {
+            background-color: transparent !important;
+            border: none;
+            padding: 6px 10px;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -617,16 +632,56 @@
                             </td>
                             <td>
                                 @if($booking->booking_details->isNotEmpty())
-                                    {{ $booking->booking_details->first()->booking_time }}
+                                    {{ \Carbon\Carbon::parse($booking->booking_details->first()->booking_time)->format('d/m/Y') }}
                                 @else
                                     N/A
                                 @endif
                             </td>
 
                             <td>
-                                <button class="btn btn-sm btn-info" title="Xem vé">
-                                    <i class="fas fa-eye"></i>
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-{{ $booking->id }}">
+                                    Xem vé
                                 </button>
+
+{{--                                Modal--}}
+                                <div class="modal fade" id="modal-{{ $booking->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $booking->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content transparent-modal" style="background-image: url('{{ asset('images/ticket.png') }}'); background-size: auto; background-position: center;">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalLabel-{{ $booking->id }}">Chi tiết vé xem phim</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul class="list-group list-group-flush bg-transparent text-white">
+                                                    <li class="list-group-item"><strong>Phim:</strong> {{ $booking->showtime->movie->title }}</li>
+                                                    <li class="list-group-item">
+                                                        <strong>Ngày đặt:</strong>
+                                                        {{ \Carbon\Carbon::parse(optional($booking->booking_details->first())->booking_time ?? 'Không có dữ liệu')->format('d/m/Y') }}
+                                                    </li>
+
+                                                    <li class="list-group-item"><strong>Trạng thái:</strong> {{ $booking->status == '1' ? 'Đã thanh toán' : 'Chưa thanh toán' }}</li>
+                                                    <li class="list-group-item"><strong>Ghế:</strong>
+                                                        @foreach ($booking->booking_details as $detail)
+                                                            {{ $detail->seat->seat_code }}@if (!$loop->last), @endif
+                                                        @endforeach
+                                                    </li>
+                                                    <li class="list-group-item"><strong>Phòng:</strong> {{ $booking->showtime->room->room_number }}</li>
+                                                    <li class="list-group-item"><strong>Suất chiếu:</strong> {{ $booking->showtime->start_time }} - {{ $booking->showtime->end_time }}</li>
+                                                    <li class="list-group-item"><strong>Rạp:</strong> {{ $booking->showtime->room->cinema->name }}</li>
+                                                    <li class="list-group-item"><strong>Ngày chiếu:</strong> {{ \Carbon\Carbon::parse($booking->showtime->movie->release_date)->format('d/m/Y') }}</li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
                             </td>
                         </tr>
                     @empty
