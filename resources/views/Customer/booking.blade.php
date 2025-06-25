@@ -486,24 +486,46 @@
                 @endforeach
             </div>
 
-            <div>
+                <div class="d-flex align-items-center gap-3 mt-3">
+                    <div class="d-flex align-items-center">
+                        <div style="width: 20px; height: 20px; background-color: gold; border: 1px solid #000; margin-right: 5px;"></div>
+                        <span>Ghế VIP</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div style="width: 20px; height: 20px; background-color: #fff; border: 1px solid #000; margin-right: 5px;"></div>
+                        <span>Ghế thường</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div style="width: 20px; height: 20px; background-color: #ccc; border: 1px solid #000; margin-right: 5px;"></div>
+                        <span>Ghế đã đặt</span>
+                    </div>
+                </div>
+
+            <div class="mt-3">
                 <p>Giá vé ghế thường: 45.000đ</p>
                 <p>Giá vé ghế vip: 50.000đ</p>
             </div>
 
 {{--            Chọn đồ ăn vặt --}}
-            <div id="snack-list">
-                @foreach ($snacks as $snack)
-                    <div class="snack-item mb-2" data-price="{{ $snack->price }}" data-id="{{ $snack->id }}">
-                        <strong>{{ $snack->name }}</strong> - Giá: <span class="price">{{ number_format($snack->price) }}</span>đ
-                        <div class="input-group mt-1" style="max-width: 200px;">
-                            <button type="button" class="btn btn-sm btn-outline-secondary decrease">-</button>
-                            <input type="text" name="snack_qty[{{ $snack->id }}]" class="form-control text-center quantity" value="0" readonly>
-                            <button type="button" class="btn btn-sm btn-outline-secondary increase">+</button>
+                <div class="row row-cols-2 row-cols-md-3 g-3">
+                    @foreach($snacks as $snack)
+                        <div class="col">
+                            <div class="card snack-item h-100 text-center" data-price="{{ $snack->price }}">
+                                <img src="{{ asset('storage/' . $snack->image) }}" class="card-img-top" alt="{{ $snack->name }}" style="height: 300px; object-fit: cover;">
+                                <div class="card-body p-2">
+                                    <h6 class="fw-bold mb-1">{{ $snack->name }}</h6>
+                                    <p class="text-muted mb-2">Giá: {{ number_format($snack->price, 0, ',', '.') }}đ</p>
+                                    <div class="input-group justify-content-center">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm decrease">-</button>
+                                        <input type="text" class="form-control text-center quantity" name="snacks[{{ $snack->id }}]" value="0" readonly style="width: 50px;">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm increase">+</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
+
 
             <div class="mt-3">
                 <strong>Tổng tiền snack: <span id="snack-total">0</span>đ</strong>

@@ -481,6 +481,14 @@
 </head>
 
 <body>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
@@ -498,14 +506,20 @@
                     <li class="nav-item"><a class="nav-link" href="">Liên hệ</a></li>
                 </ul>
 
-                <div class="nav-buttons">
+                <div class="nav-buttons d-flex gap-2">
                     @if(session()->has('customer_id'))
-                        <form method="POST" action="{{ route('customers.logout') }}">
-                            @csrf
-                            <button class="btn btn-primary">
-                                <i class="fas fa-sign-out"></i> Đăng xuất
-                            </button>
-                        </form>
+
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-ticket"></i><a href="{{ route('bookings.history') }}" style="color: white"> Lịch sử</a>
+                        </button>
+
+                            <form method="POST" action="{{ route('customers.logout') }}">
+                                @csrf
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-sign-out"></i> Đăng xuất
+                                </button>
+                            </form>
+
                     @else
                         <div class="auth-buttons">
                             <a href="{{ route('customers.login') }}" class="login-btn">Đăng nhập</a>

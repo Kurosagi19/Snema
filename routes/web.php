@@ -12,7 +12,7 @@ Route::get('/', function () {
 Route::middleware(\App\Http\Middleware\loginCustomer::class)->prefix('/customer')->group(function() {
     Route::get('/bookings/create/', [\App\Http\Controllers\BookingController::class, 'create'])->name('bookings.create');
 
-    Route::get('/bookings/history', [\App\Http\Controllers\BookingController::class, 'history'])->name('booking.history');
+    Route::get('/bookings/history', [\App\Http\Controllers\BookingController::class, 'history'])->name('bookings.history');
     Route::post('/logout', [\App\Http\Controllers\CustomerController::class, 'logout'])->name('customers.logout');
 });
 

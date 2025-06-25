@@ -33,14 +33,36 @@ class BookingController extends Controller
             'payment_options:id,option',
             'promotion:id,promotion_type',
             'booking_snacks.snack:id,name,price',
-            'booking_details.seat:id,seat_code,seat_type' // Đổi từ seats thành seat
+            'booking_details.seat:id,seat_code,seat_type'
         ])
             ->whereHas('customers')
             ->whereHas('showtime.movie')
-            ->whereHas('booking_details.seat') // Đổi từ seats thành seat
+            ->whereHas('booking_details.seat')
             ->get();
 
         return view('Admin.orders', compact('bookings'));
+    }
+
+    public function history() {
+        $customer_id = session('customer_id');
+
+        $bookings = Booking::with([
+            'customers:id,name,email,phone_number',
+            'admins:id,name,email',
+            'showtime.movie:id,title,duration',
+            'showtime.room.cinema:id,name',
+            'payment_options:id,option',
+            'promotion:id,promotion_type',
+            'booking_snacks.snack:id,name,price',
+            'booking_details.seat:id,seat_code,seat_type'
+        ])
+            ->whereHas('customers')
+            ->whereHas('showtime.movie')
+            ->whereHas('booking_details.seat')
+            ->where('customer_id', $customer_id)
+            ->get();
+
+        return view('Customer.history', compact('bookings'));
     }
 
     /**

@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Xử lý tăng/giảm số lượng snack
     document.querySelectorAll('.increase').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const input = this.parentNode.querySelector('.quantity');
             input.value = parseInt(input.value) + 1;
             updateSnackTotal();
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.querySelectorAll('.decrease').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const input = this.parentNode.querySelector('.quantity');
             if (parseInt(input.value) > 0) {
                 input.value = parseInt(input.value) - 1;
@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
 
     // Tính tổng tiền snack
     function updateSnackTotal() {
@@ -29,3 +30,4 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('snack-total').textContent = total.toLocaleString();
     }
 });
+

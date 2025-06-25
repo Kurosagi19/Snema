@@ -107,8 +107,6 @@
                                 @if($booking->status == 1)
                                     <span class="status-completed"><i class="fas fa-check-circle"></i> Hoàn thành</span>
                                 @elseif($booking->status == 0)
-                                    <span class="status-pending"><i class="fas fa-clock"></i> Đang xử lý</span>
-                                @else
                                     <span class="status-cancelled"><i class="fas fa-times-circle"></i> Đã hủy</span>
                                 @endif
                             </td>
