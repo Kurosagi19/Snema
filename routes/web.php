@@ -36,7 +36,7 @@ Route::get('/customer/create', [\App\Http\Controllers\AdminController::class, 'c
 Route::post('/customer/create', [\App\Http\Controllers\CustomerController::class, 'store'])->name('customers.store');
 
 Route::middleware(\App\Http\Middleware\loginAdmin::class)->prefix('/admin')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admins', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
     Route::get('/movies', [\App\Http\Controllers\AdminController::class, 'movies'])->name('admin.movies');
     Route::get('/movies/create', [\App\Http\Controllers\MovieController::class, 'create'])->name('movies.create');
     Route::post('/movies/create', [\App\Http\Controllers\MovieController::class, 'store'])->name('movies.store');
@@ -56,6 +56,8 @@ Route::middleware(\App\Http\Middleware\loginAdmin::class)->prefix('/admin')->gro
     Route::get('/rooms', [\App\Http\Controllers\RoomController::class, 'index'])->name('admin.rooms');
     Route::get('/rooms/create', [\App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
     Route::post('/rooms/create', [\App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
+    Route::get('/rooms/{id}/edit', [\App\Http\Controllers\RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/rooms/{id}', [\App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
     Route::delete('/rooms/{id}', [\App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
     Route::post('/logout', [\App\Http\Controllers\AdminController::class, 'logout'])->name('admin.logout');
 });

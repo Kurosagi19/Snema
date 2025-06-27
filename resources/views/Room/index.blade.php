@@ -52,7 +52,7 @@
             <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
             <li><a href="{{ route('admin.bookings') }}"><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
             <li><a href=""><i class="fas fa-users"></i> Quản lý người dùng</a></li>
-            <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
+            <li><a href="{{ route('admin.index') }}"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
         </ul>
     </aside>
 
@@ -79,6 +79,7 @@
                         <th>Số phòng</th>
                         <th>Số lượng ghế</th>
                         <th>Rạp</th>
+                        <th>Địa chỉ</th>
                         <th>Thao tác</th>
                     </tr>
                     </thead>
@@ -96,7 +97,10 @@
                                 {{ $room->cinema->name }}
                             </td>
                             <td>
-                                <a href="" class="btn btn-warning">Sửa</a>
+                                {{ $room->cinema->location->location_name }}
+                            </td>
+                            <td>
+                                <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-warning">Sửa</a>
                                 <a href="" class="btn btn-danger">Xoá</a>
                             </td>
                         </tr>

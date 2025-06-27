@@ -17,7 +17,7 @@
             <ul class="sidebar-menu">
                 <li><a href="movies.blade.php"><i class="fas fa-film"></i> Quản lý phim</a></li>
                 <li><a href="users.blade.php"><i class="fas fa-users"></i> Quản lý người dùng</a></li>
-                <li><a href="dashboard.blade.php"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
+                <li><a href="index.blade.php"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
                 <li><a href="categories.blade.php"><i class="fas fa-tags"></i> Quản lý thể loại</a></li>
                 <li><a href="orders.blade.php"><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
                 <li><a href="snacks.blade.php" class="active"><i class="fas fa-cookie"></i> Quản lý snack</a></li>

@@ -69,7 +69,7 @@ class AdminController extends Controller
         $array = Arr::add($array, 'email', $request->email);
         $array = Arr::add($array, 'password', $password);
         Admin::create($array);
-        return Redirect::route('admin.dashboard');
+        return Redirect::route('admin.index')->with('success', 'Thêm quản trị viên mới thành công');
     }
 
     /**

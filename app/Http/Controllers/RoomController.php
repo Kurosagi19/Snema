@@ -109,17 +109,70 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Room $room)
+    public function edit($id)
     {
-        //
+        $room = Room::with(['cinema.location'])->findOrFail($id);
+        $cinema = Cinema::with(['location'])->findOrFail($room->cinema_id);
+        $location = Location::with(['cinema'])->get();
+        return view('Room.edit', compact('room', 'cinema', 'location'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoomRequest $request, Room $room)
+        public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'room_number' => 'required',
+            'total_seat' => 'required|integer|min:1',
+            'cinema_id' => 'required|exists:cinemas,id',
+        ]);
+
+        $room = Room::findOrFail($id);
+        $oldSeatCount = $room->total_seat;
+        $newSeatCount = $request->total_seat;
+
+        // Cập nhật thông tin phòng
+        $room->update([
+            'room_number' => $request->room_number,
+            'total_seat' => $newSeatCount,
+            'cinema_id' => $request->cinema_id,
+        ]);
+
+        $colsPerRow = 8;
+        $currentRow = chr(65); // A
+        $rowCount = 0;
+
+        // 1. Nếu thêm ghế
+        if ($newSeatCount > $oldSeatCount) {
+            for ($i = $oldSeatCount + 1; $i <= $newSeatCount; $i++) {
+                $rowIndex = floor(($i - 1) / $colsPerRow); // A, B, C...
+                $currentRow = chr(65 + $rowIndex);
+                $seatNumber = ($i - 1) % $colsPerRow + 1;
+
+                $seat_code = $currentRow . $seatNumber;
+                $seat_type = in_array($currentRow, ['A', 'B']) ? 'vip' : 'normal';
+                $seat_price = $seat_type === 'vip' ? 50000 : 45000;
+
+                Seat::create([
+                    'room_id' => $room->id,
+                    'seat_code' => $seat_code,
+                    'seat_number' => $i,
+                    'seat_type' => $seat_type,
+                    'seat_status' => '1',
+                    'seat_price' => $seat_price,
+                ]);
+            }
+        }
+
+        // 2. Nếu giảm ghế
+        if ($newSeatCount < $oldSeatCount) {
+            Seat::where('room_id', $room->id)
+                ->where('seat_number', '>', $newSeatCount)
+                ->delete();
+        }
+
+        return redirect()->route('admin.rooms')->with('success', 'Cập nhật phòng và ghế thành công!');
     }
 
     /**
