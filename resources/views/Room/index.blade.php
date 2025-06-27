@@ -46,8 +46,8 @@
             <h2>Admin Panel</h2>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="{{ route('admin.rooms') }}"><i class="fas fa-film"></i> Quản lý phòng chiếu</a></li>
-            <li><a href="{{ route('admin.movies') }}" class="active"><i class="fas fa-film"></i> Quản lý phim</a></li>
+            <li><a href="{{ route('admin.rooms') }}" class="active"><i class="fas fa-film"></i> Quản lý phòng chiếu</a></li>
+            <li><a href="{{ route('admin.movies') }}"><i class="fas fa-film"></i> Quản lý phim</a></li>
             <li><a href=""><i class="fas fa-tags"></i> Quản lý thể loại</a></li>
             <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
             <li><a href="{{ route('admin.bookings') }}"><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
@@ -100,8 +100,14 @@
                                 {{ $room->cinema->location->location_name }}
                             </td>
                             <td>
-                                <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-warning">Sửa</a>
-                                <a href="" class="btn btn-danger">Xoá</a>
+                                <div class="d-flex">
+                                    <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-warning me-2">Sửa</a>
+                                    <form action="{{ route('rooms.destroy', $room->id) }}" method="POST" onsubmit="return confirm('Xác nhận xoá phòng này?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Xoá</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
 

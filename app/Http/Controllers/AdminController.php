@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Booking;
+use App\Models\Cinema;
 use App\Models\Customer;
 use App\Models\Movie;
 use Illuminate\Http\Request;
@@ -19,14 +20,19 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+
+    public function dashboard() {
         $movies = Movie::count();
         $bookings = Booking::count();
+        $cinemas = Cinema::count();
         $customers = Customer::count();
+        return view('Admin.dashboard', compact('movies', 'bookings', 'cinemas'));
+    }
+
+    public function index()
+    {
         $admins = Admin::all();
-        $administrators = session('admin_id');
-        return view('Admin.dashboard', compact('movies', 'bookings', 'customers', 'admins', 'administrators'));
+        return view('Admin.index', compact('admins'));
     }
 
     public function movies() {

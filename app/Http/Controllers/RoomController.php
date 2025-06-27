@@ -178,8 +178,22 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room $room)
+    public function destroy($id)
     {
-        //
+        $room = Room::findOrFail($id);
+
+        if ($room->showtimes()->count() > 0) {
+            return back()->with('error', 'Không thể xoá phòng đang có suất chiếu.');
+        }
+
+
+        // Xoá toàn bộ ghế thuộc phòng
+        Seat::where('room_id', $room->id)->delete();
+
+        // Sau đó xoá phòng
+        $room->delete();
+
+        return redirect()->route('admin.rooms')->with('success', 'Đã xoá phòng và toàn bộ ghế thành công.');
     }
+
 }
