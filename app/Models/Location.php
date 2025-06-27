@@ -9,4 +9,10 @@ class Location extends Model
 {
     /** @use HasFactory<\Database\Factories\LocationFactory> */
     use HasFactory;
+
+    public function cinema()
+    {
+        return $this->belongsTo(Cinema::class);
+
+    }
 }

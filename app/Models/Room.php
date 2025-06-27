@@ -10,11 +10,10 @@ class Room extends Model
     /** @use HasFactory<\Database\Factories\RoomFactory> */
     use HasFactory;
 
+    protected $fillable = ['id', 'room_number', 'total_seat', 'cinema_id'];
+    public $timestamps = false;
+
     public function cinema() {
         return $this->belongsTo(Cinema::class);
     }
-
-//    public function location() {
-//        return $this->belongsTo(Location::class);
-//    }
 }

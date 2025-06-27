@@ -13,4 +13,8 @@ class Cinema extends Model
     public function rooms() {
         return $this->belongsTo(Room::class);
     }
+
+    public function location() {
+        return $this->belongsTo(Location::class);
+    }
 }

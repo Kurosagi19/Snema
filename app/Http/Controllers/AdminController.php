@@ -25,7 +25,8 @@ class AdminController extends Controller
         $bookings = Booking::count();
         $customers = Customer::count();
         $admins = Admin::all();
-        return view('Admin.dashboard', compact('movies', 'bookings', 'customers', 'admins'));
+        $administrators = session('admin_id');
+        return view('Admin.dashboard', compact('movies', 'bookings', 'customers', 'admins', 'administrators'));
     }
 
     public function movies() {

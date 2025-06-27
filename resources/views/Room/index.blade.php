@@ -26,6 +26,19 @@
     </style>
 </head>
 <body>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@elseif (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    </div>
+@endif
+
 <div class="admin-container">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -47,7 +60,7 @@
     <main class="main-content">
         <div class="container-fluid">
             <div class="page-header d-flex justify-content-between align-items-center mb-4">
-                <h1 class="page-title">Quản lý đơn hàng</h1>
+                <h1 class="page-title">Quản lý phòng chiếu</h1>
                 <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
                     <button class="btn btn-danger">
