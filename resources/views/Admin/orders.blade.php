@@ -39,7 +39,7 @@
             <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
             <li><a href="{{ route('admin.bookings') }}" class="active"><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
             <li><a href=""><i class="fas fa-users"></i> Quản lý người dùng</a></li>
-            <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
+            <li><a href="{{ route('admin.index') }}"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
         </ul>
     </aside>
 
