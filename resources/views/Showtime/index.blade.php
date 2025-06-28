@@ -73,8 +73,10 @@
             </table>
 
             <!-- Phân trang -->
-            <div class="d-flex justify-content-center">
-                {{ $showtimes->links() }}
+            <div class="row align-items-center mt-3">
+                <div class="col-md-6 col-sm-12">
+                    {{ $showtimes->links() }}
+                </div>
             </div>
 
         </div>
