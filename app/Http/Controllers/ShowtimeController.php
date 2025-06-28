@@ -13,7 +13,7 @@ class ShowtimeController extends Controller
      */
     public function index()
     {
-        $showtimes = Showtime::with('movie', 'room')->get();
+        $showtimes = Showtime::with('movie', 'room')->paginate(5);
         return view('Showtime.index', compact('showtimes'));
     }
 
