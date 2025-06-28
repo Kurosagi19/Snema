@@ -13,7 +13,8 @@ class SnackController extends Controller
      */
     public function index()
     {
-        //
+        $snacks = Snack::all();
+        return view('Snack.index', compact('snacks'));
     }
 
     /**

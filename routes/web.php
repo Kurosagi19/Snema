@@ -36,6 +36,7 @@ Route::get('/customer/create', [\App\Http\Controllers\AdminController::class, 'c
 Route::post('/customer/create', [\App\Http\Controllers\CustomerController::class, 'store'])->name('customers.store');
 
 Route::middleware(\App\Http\Middleware\loginAdmin::class)->prefix('/admin')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/index', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
     Route::get('/movies', [\App\Http\Controllers\AdminController::class, 'movies'])->name('admin.movies');
     Route::get('/movies/create', [\App\Http\Controllers\MovieController::class, 'create'])->name('movies.create');

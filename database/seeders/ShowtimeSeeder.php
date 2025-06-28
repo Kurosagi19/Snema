@@ -44,7 +44,6 @@ class ShowtimeSeeder extends Seeder
                 'end_time' => $endTime->format('H:i:s'),
                 'price' => $price,
                 'status' => '1',
-
                 'movie_id' => $movie_id,
                 'room_id' => $room_id,
             ]);
