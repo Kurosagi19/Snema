@@ -18,12 +18,12 @@
         <ul class="sidebar-menu">
             <li><a href="{{ route('admin.rooms') }}"><i class="fas fa-solid fa-house"></i> Quản lý phòng chiếu</a></li>
             <li><a href="{{ route('admin.movies') }}"><i class="fas fa-film"></i> Quản lý phim</a></li>
-            <li><a href="{{ route('admin.showtimes') }}"><i class="fas fa-solid fa-clock"></i> Quản lý giờ chiếu</a></li>
+            <li><a href="#" class="active"><i class="fas fa-solid fa-clock"></i> Quản lý giờ chiếu</a></li>
             <li><a href=""><i class="fas fa-tags"></i> Quản lý thể loại</a></li>
             <li><a href=""><i class="fas fa-cookie"></i> Quản lý snack</a></li>
             <li><a href="{{ route('admin.bookings') }}"><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
             <li><a href=""><i class="fas fa-users"></i> Quản lý người dùng</a></li>
-            <li><a href="#" class="active"><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
+            <li><a href="#" ><i class="fas fa-user-shield"></i> Quản lý admin</a></li>
         </ul>
     </aside>
 
@@ -33,34 +33,40 @@
             <h1 class="page-title">Trang quản trị</h1>
             <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
-            <button class="btn btn-primary">
-                <i class="fas fa-sign-out"></i> Đăng xuất
-            </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-sign-out"></i> Đăng xuất
+                </button>
             </form>
         </div>
-
-{{--        <div class="page-header">--}}
-{{--            <h1 class="page-title">Quản lý admin</h1>--}}
-{{--            <button class="btn btn-primary" onclick="openModalWithData('admin')">--}}
-{{--                <i class="fas fa-plus"></i> <a href="{{ route('admin.create') }}" style="color: white">Thêm admin</a>--}}
-{{--            </button>--}}
-{{--        </div>--}}
 
         <div class="table-container">
             <table class="table">
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Tên admin</th>
-                    <th>Email</th>
+                    <th>Giờ bắt đầu</th>
+                    <th>Giờ kết thúc</th>
+                    <th>Giá cộng thêm theo giờ</th>
+                    <th>Phim</th>
+                    <th>Phòng chiếu</th>
+                    <th>Rạp</th>
+                    <th>Chức năng</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($admins as $admin)
+                @foreach($showtimes as $showtime)
                     <tr>
-                        <th scope="row">{{ $admin -> id }}</th>
-                        <td>{{ $admin -> name }}</td>
-                        <td>{{ $admin->email }}</td>
+                        <th scope="row">{{ $showtime -> id }}</th>
+                        <td>{{ $showtime -> start_time }}</td>
+                        <td>{{ $showtime -> end_time }}</td>
+                        <td>{{ $showtime -> price }}</td>
+                        <td>{{ $showtime->movie->title }}</td>
+                        <td>{{ $showtime->room->room_number }}</td>
+                        <td>{{ $showtime->room->cinema->name }} - {{ $showtime->room->cinema->location->location_name }}</td>
+                        <td>
+                            <a href="" class="btn btn-warning">Sửa</a>
+                            <button class="btn btn-danger">Xoá</button>
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

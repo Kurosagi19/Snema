@@ -133,7 +133,7 @@ class AdminController extends Controller
         // ✅ Đăng nhập thủ công bằng session
         session(['admin_id' => $admin->id]);
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('admin.index');
     }
 
     public function logout(Request $request)

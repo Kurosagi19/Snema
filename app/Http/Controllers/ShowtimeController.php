@@ -13,7 +13,8 @@ class ShowtimeController extends Controller
      */
     public function index()
     {
-        //
+        $showtimes = Showtime::with('movie', 'room')->get();
+        return view('Showtime.index', compact('showtimes'));
     }
 
     /**
