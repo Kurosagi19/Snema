@@ -38,7 +38,7 @@
         <main class="main-content">
             <div class="page-header">
                 <h1 class="page-title">Quản lý phim</h1>
-                <button class="btn btn-primary" onclick="openModalWithData('movie')" data-bs-toggle="movieModal">
+                <button class="btn btn-primary">
                     <i class="fas fa-plus"></i> <a href="{{ route('movies.create') }}" style="color: white">Thêm phim</a>
                 </button>
             </div>

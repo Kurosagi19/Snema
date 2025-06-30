@@ -9,6 +9,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
 </head>
 <body>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <div class="admin-container">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -40,6 +55,11 @@
         </div>
 
         <div class="table-container">
+
+            <button class="btn btn-primary">
+                <i class="fas fa-plus"></i> <a href="{{ route('snacks.create') }}" style="color: white">Thêm snack</a>
+            </button>
+
             <table class="table">
                 <thead>
                 <tr>
@@ -49,6 +69,7 @@
                     <th>Mô tả</th>
                     <th>Trạng thái</th>
                     <th>Đơn giá</th>
+                    <th>Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -66,6 +87,16 @@
                             @endif
                         </td>
                         <td>{{ $snack -> price }}</td>
+                        <td>
+                            <form action="{{ route('snacks.update_status', $snack->id) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <select name="status" onchange="this.form.submit()" class="form-select form-select-sm">
+                                    <option value="1" {{ $snack->status == 1 ? 'selected' : '' }}>Còn hàng</option>
+                                    <option value="0" {{ $snack->status == 0 ? 'selected' : '' }}>Hết hàng</option>
+                                </select>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

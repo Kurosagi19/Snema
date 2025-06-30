@@ -52,6 +52,9 @@ Route::middleware(\App\Http\Middleware\loginAdmin::class)->prefix('/admin')->gro
     Route::get('/genres/{id}/edit', [GenreController::class, 'edit'])->name('genres.edit');
     Route::put('/genres/{id}', [GenreController::class, 'update'])->name('genres.update');
     Route::get('/snacks', [\App\Http\Controllers\SnackController::class, 'index'])->name('snacks.index');
+    Route::get('/snacks/create', [\App\Http\Controllers\SnackController::class, 'create'])->name('snacks.create');
+    Route::post('/snacks/create', [\App\Http\Controllers\SnackController::class, 'store'])->name('snacks.store');
+    Route::patch('/snacks/{id}/update-status', [\App\Http\Controllers\SnackController::class, 'update_status'])->name('snacks.update_status');
     Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'destroy'])->name('bookings.destroy');
     Route::get('/bookings', [\App\Http\Controllers\BookingController::class, 'index'])->name('admin.bookings');
     Route::get('/rooms', [\App\Http\Controllers\RoomController::class, 'index'])->name('admin.rooms');

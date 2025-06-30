@@ -515,11 +515,18 @@
                                 <div class="card-body p-2">
                                     <h6 class="fw-bold mb-1">{{ $snack->name }}</h6>
                                     <p class="text-muted mb-2">Giá: {{ number_format($snack->price, 0, ',', '.') }}đ</p>
-                                    <div class="input-group justify-content-center">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm decrease">-</button>
-                                        <input type="text" class="form-control text-center quantity" name="snacks[{{ $snack->id }}]" value="0" readonly style="width: 50px;">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm increase">+</button>
-                                    </div>
+
+                                        @if ($snack->status == 0)
+                                            <span class="badge bg-danger">Hết hàng</span>
+                                        @else
+                                            <span class="badge bg-success">Còn hàng</span>
+                                            <div class="input-group justify-content-center mt-3">
+                                                <button type="button" class="btn btn-outline-secondary btn-sm decrease">-</button>
+                                                <input type="text" class="form-control text-center quantity" name="snacks[{{ $snack->id }}]" value="0" readonly style="width: 50px;">
+                                                <button type="button" class="btn btn-outline-secondary btn-sm increase">+</button>
+                                            </div>
+                                        @endif
+
                                 </div>
                             </div>
                         </div>
